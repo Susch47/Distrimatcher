@@ -380,11 +380,11 @@ def extract_notice(text: str) -> str | None:
     if m:
         n = m.group(1) or m.group(3) or str(NUMBER_WORDS.get(m.group(2).lower(), m.group(2)))
         unit = m.group(4).lower()
-        unit = "Tage" if unit.startswith(("day", "tag")) else "Monate"
+        unit = "days" if unit.startswith(("day", "tag")) else "months"
         return f"{n} {unit}"
     m = re.search(r"Kündigungsfrist\s+(?:von\s+)?(\d+)\s+(Tage|Monate|Monaten|Tagen)", t, re.I)
     if m:
-        return f"{m.group(1)} {m.group(2).rstrip('n') if m.group(2).endswith('en') else m.group(2)}"
+        return f"{m.group(1)} {'days' if m.group(2).lower().startswith('tag') else 'months'}"
     return None
 
 
@@ -418,6 +418,18 @@ def extract_signatories(text: str) -> list[str]:
     return names[:12]
 
 
+GERMAN_LAW = {"luxemburg": "Luxembourg", "irisch": "Irish", "deutsch": "German", "schweizer": "Swiss", "österreich": "Austrian",
+              "liechtenstein": "Liechtenstein", "englisch": "English", "französisch": "French", "niederländisch": "Dutch"}
+
+
+def german_law(word: str) -> str:
+    w = word.lower()
+    for k, v in GERMAN_LAW.items():
+        if w.startswith(k):
+            return f"{v} law"
+    return f"{word} Recht"
+
+
 def extract_header_fields(text: str, ex: Extraction) -> None:
     t = clean(text)
     head = t[:3000]
@@ -443,12 +455,12 @@ def extract_header_fields(text: str, ex: Extraction) -> None:
     ex.governing_law = _first(
         r"(?:governed\s+by|construed\s+in\s+accordance\s+with|subject\s+to)\s+(?:and\s+construed\s+in\s+accordance\s+with\s+)?the\s+(?:internal\s+)?laws?\s+of\s+(?:the\s+)?((?:State|Commonwealth|Grand\s+Duchy)\s+of\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)",
         t, flags=re.S,
-    ) or (lambda w: f"{w} Recht" if w else None)(_first(r"unterliegt\s+(?:dem\s+)?(\w+(?:em|en|es))\s+Recht", t)) or _first(r"(\w+(?:isches|sches))\s+Recht\s+(?:anwendbar|Anwendung)", t)
+    ) or (lambda w: german_law(w) if w else None)(_first(r"unterliegt\s+(?:dem\s+)?(\w+(?:em|en|es))\s+Recht", t)) or _first(r"(\w+(?:isches|sches))\s+Recht\s+(?:anwendbar|Anwendung)", t)
     ex.jurisdiction = _first(r"(?:courts?\s+of|Gerichtsstand\s+(?:ist\s+)?)\s*(?:the\s+)?([A-Z][\w-]+(?:\s+[A-Z][\w-]+)?)", t, flags=0)
     if re.search(r"non-?exclusive|nicht\s+exklusiv|nicht-exklusiv", t, re.I):
-        ex.exclusivity = "nicht exklusiv"
+        ex.exclusivity = "non-exclusive"
     elif re.search(r"\bexclusive\b|exklusiv", t, re.I):
-        ex.exclusivity = "exklusiv"
+        ex.exclusivity = "exclusive"
     ex.termination_notice = extract_notice(text)
     ex.term = _first(
         r"((?:shall\s+(?:continue|remain)\s+in\s+(?:full\s+)?(?:force|effect)|initial\s+term|unbestimmte\s+Zeit|auf\s+unbestimmte\s+Dauer)[^.]{0,200}\.)",
@@ -670,7 +682,7 @@ def extract_document(text: str, pdf_bytes: bytes | None = None, ocr_pages: set[i
         try:
             funds_from_tables(pdf_bytes, funds, ocr_pages or set())
         except Exception as exc:
-            ex.warnings.append(f"Tabellenerkennung fehlgeschlagen: {exc}")
+            ex.warnings.append(f"Table detection failed: {exc}")
     funds_from_text(text, funds)
     # Funds, deren Name nur Teil eines längeren Namens ist, zusammenführen
     keys = sorted(funds, key=len, reverse=True)
@@ -727,9 +739,9 @@ def extract_document(text: str, pdf_bytes: bytes | None = None, ocr_pages: set[i
     assigned = {sc.isin for f in ex.funds for sc in f.share_classes if sc.isin}
     orphan = [i for i in ex.isins if i not in assigned]
     if orphan:
-        ex.warnings.append(f"{len(orphan)} ISIN(s) ohne Fund-Zuordnung: {', '.join(orphan[:10])}")
+        ex.warnings.append(f"{len(orphan)} ISIN(s) without fund assignment: {', '.join(orphan[:10])}")
     if not ex.funds:
-        ex.warnings.append("Keine Funds erkannt – bitte Dokument manuell prüfen.")
+        ex.warnings.append("No funds detected – please review the document manually.")
     if not ex.parties:
-        ex.warnings.append("Vertragsparteien nicht erkannt (evtl. nur Schedule/Anhang).")
+        ex.warnings.append("Contract parties not detected (possibly a schedule/annex only).")
     return ex

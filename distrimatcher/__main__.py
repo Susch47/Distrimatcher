@@ -41,7 +41,7 @@ def main() -> None:
     t.start()
     while not server.started:
         time.sleep(0.05)
-    print(f"Distrimatcher läuft auf {url}  (Beenden mit Strg+C)")
+    print(f"Distrimatcher running at {url}  (Ctrl+C to quit)")
 
     if not args.no_browser and not args.browser:
         try:
@@ -52,7 +52,7 @@ def main() -> None:
             server.should_exit = True
             return
         except Exception as exc:  # kein pywebview / kein WebView2 -> Browser
-            print(f"Desktop-Fenster nicht verfügbar ({exc}), öffne Browser.")
+            print(f"Desktop window not available ({exc}), opening browser.")
     if not args.no_browser:
         webbrowser.open(url)
     try:

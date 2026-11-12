@@ -3,7 +3,8 @@
 from pathlib import Path
 
 root = Path(SPECPATH).parent
-datas = [(str(root / "distrimatcher" / "static"), "distrimatcher/static")]
+datas = [(str(root / "distrimatcher" / "static"), "distrimatcher/static"),
+         (str(root / "distrimatcher" / "manual.md"), "distrimatcher")]
 tess = Path(SPECPATH) / "tesseract"
 if tess.exists():
     datas.append((str(tess), "tesseract"))

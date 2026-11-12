@@ -33,7 +33,21 @@ packaging\build_windows.bat
 
 Ergebnis: `dist\Distrimatcher\Distrimatcher.exe` (Ordner kann so verteilt werden). Um Tesseract mitzuliefern, den Tesseract-Installationsordner nach `packaging\tesseract\` kopieren (mit `tesseract.exe` und `tessdata\`). Er wird dann automatisch eingebunden.
 
-## Ablauf in der App
+## Ablauf in der App (Oberfläche auf Englisch, JB-Layout)
+
+Die App startet leer und führt durch fünf Schritte: **Agreements → Overview → Watchlist → Provider e-mail → Activity log**.
+Das Handbuch (Info-Button bzw. „Manual“) ist die Datei `distrimatcher/manual.md`. Beim ersten Start wird sie nach
+`%LOCALAPPDATA%\Distrimatcher\manual.md` kopiert und kann dort oder direkt in der App bearbeitet werden.
+
+* **Watchlist:** jede nicht abgedeckte Share Class mit Merkmalen (Heuristik), Fundstelle, Erstfund-Datum („new“) und
+  Aktionen *Confirm*, *Dismiss*, *Add to agreement* und *Open agreement*.
+* **Overview:** Wasserfalldiagramm Fund IDs → ISINs → in Verträgen gefunden → abgedeckt → Lücken; Sortierung nach
+  Name, Fund-ID, meisten Lücken oder geringster Abdeckung.
+* **Provider e-mail:** vorformulierte E-Mail (EN/DE) mit den nicht abgedeckten ISINs je Anbieter, als `.eml` für Outlook.
+* **Activity log:** Protokoll aller Schritte, plus „Reset all data“.
+* Schrift: Verlag, falls lokal installiert; sonst die mitgelieferte Montserrat Light (OFL-Lizenz).
+
+### Details (Stand vor dem Redesign)
 
 **1 · Agreements**
 * ZIP per Drag & Drop hochladen. Verschachtelte ZIPs werden entpackt, Duplikate über einen SHA-256-Hash erkannt.

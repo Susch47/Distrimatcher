@@ -1,23 +1,21 @@
-DISTRIMATCHER – Testpaket für Windows
-=====================================
+DISTRIMATCHER – Testpaket für Windows   (die App selbst ist auf Englisch)
+=========================================================================
 
 Start
   Ordner "Distrimatcher" öffnen und Distrimatcher.exe doppelklicken.
-  (Beim ersten Start kann Windows SmartScreen warnen: "Weitere Informationen" -> "Trotzdem ausführen".
-   Das Programm ist nicht signiert.)
-  Es öffnet sich ein Fenster (oder der Browser) mit der Adresse http://127.0.0.1:8765.
-  Alles läuft lokal; die Vertragsdaten verlassen den PC nicht.
+  (Windows SmartScreen kann warnen: "Weitere Informationen" -> "Trotzdem ausführen" – das Programm ist nicht signiert.)
+  Die App startet leer. Alles läuft lokal; die Vertragsdaten verlassen den PC nicht.
 
-Ausprobieren
-  1. Tab "1 · Agreements": Testdaten\demo_agreements.zip hineinziehen.
-     -> 9 Verträge werden gelesen (einer davon ist ein Scan und wird per OCR gelesen).
-  2. Tab "2 · Übersicht & Delta":
-     - "Vorschläge aus Verträgen" -> "Auswahl laden"   (öffentliche SEC-Daten, braucht Internet)
-     - "Datei importieren …" -> Testdaten\Fondsliste_mit_Retro.csv
-     -> Häkchen "nur Klassen mit Retrozession" zeigt die retro-zahlenden Klassen,
-        rot = in keinem Agreement abgedeckt. Export über "Retro-Delta als CSV".
-  3. Danach eigene Agreements (ZIP) hochladen.
+User Journey
+  1 · Agreements       Testdaten\demo_agreements.zip in das Upload-Feld ziehen.
+                        -> 9 Verträge werden gelesen (einer ist ein Scan -> OCR). Spaltenköpfe anklicken = sortieren.
+  2 · Overview          "Suggest from agreements" -> "Load selected" (öffentliche SEC-Daten, braucht Internet)
+                        "Import file" -> Testdaten\Fondsliste_mit_Retro.csv
+                        -> Wasserfall: Fund IDs -> ISINs -> in Verträgen gefunden -> abgedeckt -> Lücken.
+                        Info-Button (i) = Handbuch (bearbeitbar).
+  3 · Watchlist         Lücken prüfen: Confirm / Dismiss / Add to agreement / Open agreement.
+  4 · Provider e-mail   Anbieter wählen -> vorformulierte E-Mail (EN/DE) -> "Download .eml" öffnet sich in Outlook.
+  5 · Activity log      Protokoll aller Schritte; "Reset all data" = von vorne beginnen.
 
-Daten / Zurücksetzen
-  Gespeichert wird unter %LOCALAPPDATA%\Distrimatcher (Datenbank, PDFs, Log).
-  Ordner löschen = alles zurücksetzen.
+Daten
+  %LOCALAPPDATA%\Distrimatcher  (Datenbank, PDFs, manual.md = Handbuch, Log). Ordner löschen = alles zurücksetzen.

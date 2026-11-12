@@ -1,4 +1,4 @@
-"""Lokale SQLite-Ablage – alle Daten bleiben auf dem Rechner."""
+"""Local SQLite storage – all data stays on this computer."""
 from __future__ import annotations
 
 import json
@@ -53,7 +53,23 @@ CREATE TABLE IF NOT EXISTS universe (
     lei TEXT,
     currency TEXT,
     retro TEXT,
+    origin TEXT,
+    origin_url TEXT,
     loaded_at TEXT DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS watch (
+    key TEXT PRIMARY KEY,
+    first_seen TEXT DEFAULT (datetime('now')),
+    status TEXT NOT NULL DEFAULT 'open',
+    doc_id INTEGER,
+    note TEXT,
+    updated_at TEXT DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts TEXT DEFAULT (datetime('now')),
+    kind TEXT NOT NULL,
+    message TEXT NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_universe ON universe(source, IFNULL(fund_id,''), fund_name, IFNULL(class_id,''), IFNULL(class_name,''), IFNULL(isin,''));
 """
@@ -68,9 +84,10 @@ class DB:
             self.conn.executescript(SCHEMA)
             self.conn.execute("PRAGMA journal_mode=WAL")
             cols = {r[1] for r in self.conn.execute("PRAGMA table_info(universe)")}
-            if "retro" not in cols:  # Migration älterer Datenbanken
-                self.conn.execute("ALTER TABLE universe ADD COLUMN retro TEXT")
-                self.conn.commit()
+            for col in ("retro", "origin", "origin_url"):  # migrate older databases
+                if col not in cols:
+                    self.conn.execute(f"ALTER TABLE universe ADD COLUMN {col} TEXT")
+            self.conn.commit()
 
     # -------------------------------------------------------------- Dokumente
     def add_document(self, filename: str, sha256: str) -> tuple[int, bool]:
@@ -117,7 +134,7 @@ class DB:
 
     # -------------------------------------------------------------- Universum
     def add_universe(self, records: list[dict]) -> int:
-        cols = ["source", "umbrella", "fund_id", "fund_name", "class_id", "class_name", "isin", "ticker", "lei", "currency", "retro"]
+        cols = ["source", "umbrella", "fund_id", "fund_name", "class_id", "class_name", "isin", "ticker", "lei", "currency", "retro", "origin", "origin_url"]
         with _lock:
             before = self.conn.total_changes
             self.conn.executemany(
@@ -148,4 +165,39 @@ class DB:
             args.append(umbrella)
         with _lock:
             self.conn.execute(q, args)
+            self.conn.commit()
+
+    # -------------------------------------------------------------- Watchlist
+    def watch_states(self) -> dict[str, dict]:
+        with _lock:
+            return {r["key"]: dict(r) for r in self.conn.execute("SELECT * FROM watch")}
+
+    def watch_seen(self, keys: list[str]) -> None:
+        with _lock:
+            self.conn.executemany("INSERT OR IGNORE INTO watch(key) VALUES (?)", [(k,) for k in keys])
+            self.conn.commit()
+
+    def watch_set(self, key: str, status: str, doc_id: int | None = None, note: str | None = None) -> None:
+        with _lock:
+            self.conn.execute("INSERT OR IGNORE INTO watch(key) VALUES (?)", (key,))
+            self.conn.execute(
+                "UPDATE watch SET status=?, doc_id=?, note=COALESCE(?, note), updated_at=datetime('now') WHERE key=?",
+                (status, doc_id, note, key),
+            )
+            self.conn.commit()
+
+    # -------------------------------------------------------------- Activity log
+    def log(self, kind: str, message: str) -> None:
+        with _lock:
+            self.conn.execute("INSERT INTO events(kind, message) VALUES (?,?)", (kind, message))
+            self.conn.commit()
+
+    def events(self, limit: int = 500) -> list[dict]:
+        with _lock:
+            return [dict(r) for r in self.conn.execute("SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))]
+
+    def reset(self) -> None:
+        with _lock:
+            for t in ("documents", "universe", "watch", "events"):
+                self.conn.execute(f"DELETE FROM {t}")
             self.conn.commit()

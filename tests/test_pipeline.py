@@ -86,8 +86,8 @@ def test_eu_agreement_fields():
     assert ex.fund_entity == "Alpenblick Invest SICAV"
     assert ex.distributor == "Seeland Vertriebs AG"
     assert ex.management_company == "Alpenblick Asset Management S.A."
-    assert ex.termination_notice == "90 Tage"
-    assert ex.exclusivity == "nicht exklusiv"
+    assert ex.termination_notice == "90 days"
+    assert ex.exclusivity == "non-exclusive"
     assert set(ex.territory) == {"Switzerland", "Germany", "Austria", "Liechtenstein"}
     assert sum(len(f.share_classes) for f in ex.funds) == 7
     assert all(sc.isin for f in ex.funds for sc in f.share_classes)
@@ -98,7 +98,7 @@ def test_scanned_german_agreement_via_ocr():
     px, ex = run(EU / "Nordlicht_Vertriebsvereinbarung_2023_SCAN.pdf")
     assert px.ocr_pages >= 1
     assert ex.distributor == "Rheintal Privatbank AG"
-    assert ex.termination_notice == "3 Monate"
+    assert ex.termination_notice == "3 months"
     assert set(ex.territory) == {"Liechtenstein", "Switzerland", "Austria"}
     universe = {r["isin"] for r in csv.DictReader(open(SAMPLES / "public_data" / "synthetic_fund_universe.csv", encoding="utf-8"))}
     found = {sc.isin for f in ex.funds for sc in f.share_classes}
@@ -142,8 +142,8 @@ def test_retrocession_terms_from_agreements():
 def test_retro_import_parsing_and_guess():
     from distrimatcher.universe import guess_retro, parse_retro
 
-    assert parse_retro("Ja") == "ja" and parse_retro("0,00%") == "nein" and parse_retro("0.40%") == "0.40%"
-    assert guess_retro("I EUR acc") == "nein" and guess_retro("A EUR acc") == "ja" and guess_retro("Clean CHF") == "nein"
+    assert parse_retro("Ja") == "yes" and parse_retro("0,00%") == "no" and parse_retro("0.40%") == "0.40%"
+    assert guess_retro("I EUR acc") == "no" and guess_retro("A EUR acc") == "yes" and guess_retro("Clean CHF") == "no"
     assert guess_retro("Class W") is None
 
 
@@ -160,3 +160,43 @@ def test_retro_delta():
     # A- und R-Klassen zahlen Retro (aus der Fondsliste), I-Klassen sind clean
     assert t["retro_classes"] == 10 and t["retro_unknown"] == 0
     assert t["retro_delta"] == 5
+
+
+def test_watchlist_email_and_manual_flow(tmp_path, monkeypatch):
+    """End-to-end through the API: empty start -> upload -> import -> watchlist -> add/confirm -> e-mail."""
+    monkeypatch.setenv("DISTRIMATCHER_DATA", str(tmp_path))
+    import importlib, time
+    import distrimatcher.app as appmod
+    importlib.reload(appmod)
+    from fastapi.testclient import TestClient
+
+    c = TestClient(appmod.app)
+    assert c.get("/api/documents").json() == [] and c.get("/api/watchlist").json() == []
+    files = [("files", (p.name, p.read_bytes(), "application/pdf")) for p in sorted(EU.glob("Alpenblick*.pdf"))]
+    c.post("/api/upload", files=files)
+    for _ in range(100):
+        if all(d["status"] == "done" for d in c.get("/api/documents").json()):
+            break
+        time.sleep(0.1)
+    csv_bytes = (SAMPLES / "public_data" / "synthetic_fund_universe.csv").read_bytes()
+    c.post("/api/universe/import", files={"file": ("fondsliste.csv", csv_bytes, "text/csv")})
+    wl = [i for i in c.get("/api/watchlist").json() if i["umbrella"] == "Alpenblick Invest SICAV"]
+    assert len(wl) == 8 and all(i["status"] == "open" and i["is_new"] for i in wl)
+    item = next(i for i in wl if i["class_name"] == "R USD acc")
+    assert item["agreements"] and "row" in item["origin"] and item["isin"] in item["origin"]
+    assert any(t["label"] == "Retail" for t in item["features"])
+    doc_id = item["agreements"][0]["id"]
+    c.post("/api/watchlist/status", json={"keys": [item["key"]], "status": "added", "doc_id": doc_id})
+    ov = c.get("/api/overview").json()
+    assert ov["totals"]["covered"] >= 11
+    others = [i["key"] for i in wl if i["key"] != item["key"]][:3]
+    c.post("/api/watchlist/status", json={"keys": others, "status": "confirmed"})
+    d = c.get("/api/email/draft", params={"provider": "Alpenblick Invest SICAV", "scope": "confirmed"}).json()
+    assert d["count"] == 3 and "not covered" in d["subject"] and all(k in d["keys"] for k in others)
+    eml = c.post("/api/email/eml", json={"to": "x@example.org", "subject": d["subject"], "body": d["body"]})
+    assert eml.status_code == 200 and b"X-Unsent: 1" in eml.content
+    assert "Watchlist" in c.get("/api/manual").json()["content"]
+    kinds = {e["kind"] for e in c.get("/api/events").json()}
+    assert {"upload", "extraction", "universe", "watchlist", "email"} <= kinds
+    c.post("/api/reset")
+    assert c.get("/api/documents").json() == []

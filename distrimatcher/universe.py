@@ -43,7 +43,9 @@ class UniverseRecord:
     ticker: str | None = None
     lei: str | None = None
     currency: str | None = None
-    retro: str | None = None  # "ja" / "nein" / Satz (z. B. "0.40%") – aus Datenquelle
+    retro: str | None = None  # "yes" / "no" / rate (e.g. "0.40%") – from the data source
+    origin: str | None = None  # where the record was found ("Fundstelle")
+    origin_url: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -55,7 +57,7 @@ def online_enabled() -> bool:
 
 def _client() -> httpx.Client:
     if not online_enabled():
-        raise RuntimeError("Offline-Modus aktiv (DISTRIMATCHER_OFFLINE=1) – keine Online-Abfragen.")
+        raise RuntimeError("Offline mode active (DISTRIMATCHER_OFFLINE=1) – no online lookups.")
     return httpx.Client(headers={"User-Agent": USER_AGENT, "Accept-Encoding": "gzip"}, timeout=60, follow_redirects=True)
 
 
@@ -77,7 +79,7 @@ def sec_dataset_path(cache_dir: Path, year: int | None = None) -> Path:
                 return path
     if existing:
         return existing[-1]
-    raise RuntimeError("SEC-Datensatz nicht abrufbar")
+    raise RuntimeError("SEC dataset not available")
 
 
 _SEC_CACHE: dict[tuple[str, float], list[dict]] = {}
@@ -147,6 +149,9 @@ def sec_load_entity(path: Path, cik: str) -> list[UniverseRecord]:
                 class_name=row.get("Class Name"),
                 ticker=row.get("Class Ticker") or None,
                 currency="USD",
+                origin=f"SEC series/class dataset ({path.stem.rsplit('_', 1)[-1]}) · {row.get('Entity Name')} · "
+                       f"{row.get('Series ID')} {row.get('Series Name')} · {row.get('Class ID')} {row.get('Class Name')}",
+                origin_url=f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=485&dateb=&owner=include&count=40",
             )
         )
     return out
@@ -200,14 +205,17 @@ def gleif_load_funds(fund_names: list[str], umbrella: str | None = None, min_sco
             hits = gleif_find_fund(name, c)
             best = hits[0] if hits and hits[0]["score"] >= min_score else None
             if not best:
-                report.append({"fund": name, "lei": None, "isins": 0, "note": "keine LEI gefunden"})
+                report.append({"fund": name, "lei": None, "isins": 0, "note": "no LEI found"})
                 continue
             isins = gleif_isins(best["lei"], c)
             report.append({"fund": name, "lei": best["lei"], "gleif_name": best["name"], "isins": len(isins)})
+            origin = f"GLEIF LEI record {best['lei']} · {best['name']}"
+            url = f"https://search.gleif.org/#/record/{best['lei']}"
             if not isins:
-                records.append(UniverseRecord("GLEIF", umbrella, best["lei"], best["name"], lei=best["lei"]))
+                records.append(UniverseRecord("GLEIF", umbrella, best["lei"], best["name"], lei=best["lei"], origin=origin, origin_url=url))
             for isin in isins:
-                records.append(UniverseRecord("GLEIF", umbrella, best["lei"], best["name"], isin=isin, lei=best["lei"]))
+                records.append(UniverseRecord("GLEIF", umbrella, best["lei"], best["name"], isin=isin, lei=best["lei"],
+                                              origin=f"{origin} · ISIN {isin}", origin_url=url))
     return records, report
 
 
@@ -259,14 +267,14 @@ def parse_retro(value: str | None) -> str | None:
     if not v:
         return None
     if v in {"ja", "yes", "y", "j", "true", "wahr", "1", "x", "✓"}:
-        return "ja"
+        return "yes"
     if v in {"nein", "no", "n", "false", "falsch", "0", "-", "none", "keine", "clean", "0%", "0.00%", "0,00%"}:
-        return "nein"
+        return "no"
     m = re.search(r"(\d+(?:[.,]\d+)?)\s*(%|bp|bps)?", v)
     if m:
         num = float(m.group(1).replace(",", "."))
         if num == 0:
-            return "nein"
+            return "no"
         unit = m.group(2) or "%"
         return f"{m.group(1)}{'%' if unit == '%' else ' bp'}"
     return str(value).strip()
@@ -282,14 +290,14 @@ def guess_retro(class_name: str | None) -> str | None:
     if not class_name:
         return None
     if NO_RETRO_HINTS.search(class_name):
-        return "nein"
+        return "no"
     s = re.sub(r"^.*\(((?:Share\s+)?Class[^)]*)\)\s*$", r"\1", class_name.strip())
     s = re.sub(r"\b(?:Share|Shares|Class|Klasse|Anteilsklasse)\b", " ", s, flags=re.I)
     tok = (s.replace("-", "").split() or [""])[0].upper()
     if tok in NO_RETRO_LETTERS:
-        return "nein"
+        return "no"
     if tok in RETRO_LETTERS:
-        return "ja"
+        return "yes"
     return None
 
 
@@ -319,11 +327,11 @@ def import_table(filename: str, data: bytes, source: str = "Import") -> tuple[li
         rows = list(csv.reader(io.StringIO(text), dialect))
     rows = [r for r in rows if any(c.strip() for c in r)]
     if not rows:
-        return [], ["Datei ist leer"]
+        return [], ["File is empty"]
     m = _map_columns(rows[0])
     warnings = []
     if "fund_name" not in m and "isin" not in m:
-        return [], [f"Spalten nicht erkannt. Benötigt mind. 'Fund Name' oder 'ISIN'. Gefunden: {rows[0]}"]
+        return [], [f"Columns not recognised. Need at least 'Fund Name' or 'ISIN'. Found: {rows[0]}"]
 
     def g(r, f):
         i = m.get(f)
@@ -333,10 +341,36 @@ def import_table(filename: str, data: bytes, source: str = "Import") -> tuple[li
     for n, r in enumerate(rows[1:], start=2):
         isin = (g(r, "isin") or "").upper() or None
         if isin and not is_valid_isin(isin):
-            warnings.append(f"Zeile {n}: ungültige ISIN {isin}")
+            warnings.append(f"Row {n}: invalid ISIN {isin}")
         fund = g(r, "fund_name") or g(r, "umbrella") or isin or "?"
         cname = g(r, "class_name")
         out.append(UniverseRecord(source, g(r, "umbrella"), g(r, "fund_id"), fund, g(r, "class_id"), cname, isin,
                                   g(r, "ticker"), g(r, "fund_id") if re.fullmatch(r"[A-Z0-9]{20}", g(r, "fund_id") or "") else None,
-                                  g(r, "currency") or class_currency(cname), parse_retro(g(r, "retro"))))
+                                  g(r, "currency") or class_currency(cname), parse_retro(g(r, "retro")),
+                                  origin=f"{filename}, row {n}: " + " | ".join(c.strip() for c in r if c and c.strip())[:300]))
     return out, warnings[:50]
+
+
+def class_features(class_name: str | None, currency: str | None = None, retro: str | None = None) -> list[dict]:
+    """Heuristic share class characteristics shown as tags (e.g. Institutional, CHF, Clean share)."""
+    n = (class_name or "")
+    low = n.lower()
+    tags: list[dict] = []
+    base = (re.sub(r"\b(?:share|shares|class|klasse|anteilsklasse)\b", " ", re.sub(r"^.*\(([^)]*)\)\s*$", r"\1", n), flags=re.I)
+            .replace("-", "").split() or [""])[0].upper()
+    if re.search(r"\bclean\b|no\s*retro|ohne\s+retro", low) or retro == "no" and base not in NO_RETRO_LETTERS:
+        tags.append({"label": "Clean share", "kind": "warn"})
+    if re.search(r"institutional|\binst\b", low) or base in {"I", "IA", "IB", "J", "Z", "S", "X", "INST"}:
+        tags.append({"label": "Institutional", "kind": ""})
+    elif base in {"A", "B", "C", "P", "R", "RA", "RB", "INV", "INVESTOR", "RETAIL", "T"}:
+        tags.append({"label": "Retail", "kind": ""})
+    if re.search(r"hedged|\bh\b|hdg|gesichert", low):
+        tags.append({"label": "Currency hedged", "kind": ""})
+    ccy = currency or class_currency(n)
+    if ccy:
+        tags.append({"label": ccy, "kind": ""})
+    if re.search(r"\bdis\b|distribut|aussch", low):
+        tags.append({"label": "Distributing", "kind": ""})
+    elif re.search(r"\bacc\b|accumul|thes", low):
+        tags.append({"label": "Accumulating", "kind": ""})
+    return tags

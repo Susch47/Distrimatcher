@@ -12,7 +12,7 @@ dependencies = { file = ["requirements.txt"] }
 include = ["distrimatcher*"]
 
 [tool.setuptools.package-data]
-distrimatcher = ["static/*"]
+distrimatcher = ["static/*", "static/fonts/*", "manual.md"]
 
 [project.scripts]
 distrimatcher = "distrimatcher.__main__:main"

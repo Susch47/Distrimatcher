@@ -8,9 +8,9 @@ from difflib import SequenceMatcher
 from .extract import clean, norm_class, norm_fund
 from .universe import guess_retro
 
-COVERED = "abgedeckt"
-NOT_COVERED = "nicht abgedeckt"
-CHECK = "prüfen"
+COVERED = "covered"
+NOT_COVERED = "gap"
+CHECK = "review"
 MATCH_THRESHOLD = 0.86
 
 
@@ -77,11 +77,11 @@ CCYS = {"EUR", "USD", "CHF", "GBP", "JPY", "SEK", "NOK", "DKK", "AUD", "CAD", "S
 def retro_status(universe_class: dict, contract_retro: list[bool]) -> tuple[str | None, str | None]:
     """Retro-Status einer Klasse: Datenquelle > Vertrag > Vermutung (Klassenname)."""
     if universe_class.get("retro"):
-        return universe_class["retro"], "Daten"
+        return universe_class["retro"], "data"
     if contract_retro:
-        return ("ja" if any(contract_retro) else "nein"), "Vertrag"
+        return ("yes" if any(contract_retro) else "no"), "agreement"
     g = guess_retro(universe_class.get("class_name"))
-    return (g, "Vermutung") if g else (None, None)
+    return (g, "assumed") if g else (None, None)
 
 
 def coverage_from_documents(docs: list[dict]) -> list[dict]:
@@ -109,7 +109,15 @@ def _phrase_in(text_norm: str, fund_name: str) -> bool:
     return len(n.split()) >= 2 and f" {n} " in text_norm
 
 
-def build_overview(universe: list[dict], docs: list[dict]) -> dict:
+def class_key(fund: dict, cl: dict) -> str:
+    """Stable key of a share class (used by the watchlist)."""
+    return cl.get("isin") or cl.get("class_id") or f"{fund.get('fund_id') or fund.get('fund_name')}|{cl.get('class_name') or ''}"
+
+
+def build_overview(universe: list[dict], docs: list[dict], manual: dict[str, dict] | None = None) -> dict:
+    """manual: class key -> {"doc_id", "doc_name"} for classes added to an agreement by hand."""
+    manual = manual or {}
+    doc_ids = {d["filename"]: d["id"] for d in docs}
     coverage = coverage_from_documents(docs)
     doc_text_norm = {d["id"]: " " + norm_fund(d.get("text") or "") + " " for d in docs}
     isin_cov: dict[str, list[dict]] = defaultdict(list)
@@ -143,7 +151,7 @@ def build_overview(universe: list[dict], docs: list[dict]) -> dict:
                 continue
             s = name_score(f["fund_name"], c["fund_name"])
             if s >= MATCH_THRESHOLD:
-                matches[id(c)] = {"cov": c, "score": s, "how": "Name"}
+                matches[id(c)] = {"cov": c, "score": s, "how": "name"}
         fulltext_docs = []
         if not matches:
             fulltext_docs = [d for d in docs if _phrase_in(doc_text_norm[d["id"]], f["fund_name"])]
@@ -159,33 +167,40 @@ def build_overview(universe: list[dict], docs: list[dict]) -> dict:
                 if sc_hit:
                     hit = "ISIN"
                 elif c["all_classes"]:
-                    hit = "alle Klassen"
+                    hit = "all classes"
                 else:
                     sc_hit = next((sc for sc in c["share_classes"] if class_matches(cl.get("class_name"), sc.get("name"))
                                    and not (sc.get("isin") and cl.get("isin") and sc["isin"] != cl["isin"])), None)
-                    hit = "Klassenname" if sc_hit else None
+                    hit = "class name" if sc_hit else None
                 if hit:
                     status, via = COVERED, hit
                     docs_hit.append(c["doc_name"])
                     if sc_hit and sc_hit.get("retro") is not None:
                         contract_retro.append(sc_hit["retro"])
             if status != COVERED and (any(not m["cov"]["share_classes"] and not m["cov"]["all_classes"] for m in matches.values()) or fulltext_docs):
-                status, via = CHECK, "Fund genannt, Klassen nicht spezifiziert" if matches else "Fund nur im Volltext gefunden"
+                status, via = CHECK, "fund named, classes not specified" if matches else "fund found in full text only"
                 docs_hit = [m["cov"]["doc_name"] for m in matches.values()] or [d["filename"] for d in fulltext_docs]
+            key = class_key(f, cl)
+            if status != COVERED and key in manual:
+                status, via = COVERED, "added manually"
+                docs_hit = [manual[key].get("doc_name")] if manual[key].get("doc_name") else docs_hit
             retro, basis = retro_status(cl, contract_retro)
             classes_out.append({
                 "class_name": cl.get("class_name"), "class_id": cl.get("class_id"), "isin": cl.get("isin"),
                 "ticker": cl.get("ticker"), "currency": cl.get("currency"), "source": cl.get("source"),
-                "status": status, "via": via, "documents": sorted(set(docs_hit)),
-                "retro": retro, "retro_basis": basis, "pays_retro": None if retro is None else retro != "nein",
+                "status": status, "via": via, "documents": sorted(set(d for d in docs_hit if d)),
+                "document_ids": sorted({doc_ids[d] for d in docs_hit if d in doc_ids}),
+                "key": key, "origin": cl.get("origin"), "origin_url": cl.get("origin_url"), "lei": cl.get("lei"),
+                "retro": retro, "retro_basis": basis, "pays_retro": None if retro is None else retro != "no",
             })
         n_cov = sum(1 for c in classes_out if c["status"] == COVERED)
         result_funds.append({
             "umbrella": f["umbrella"], "fund_id": f["fund_id"], "fund_name": f["fund_name"],
             "sources": sorted(f["sources"]),
             "matched_agreements": sorted({m["cov"]["doc_name"] for m in matches.values()} | {d["filename"] for d in fulltext_docs}),
+            "matched_agreement_ids": sorted({m["cov"]["doc_id"] for m in matches.values()} | {d["id"] for d in fulltext_docs}),
             "match": max((m["score"] for m in matches.values()), default=0.8 if fulltext_docs else 0.0),
-            "match_how": sorted({m["how"] for m in matches.values()}) or (["Volltext"] if fulltext_docs else []),
+            "match_how": sorted({m["how"] for m in matches.values()}) or (["full text"] if fulltext_docs else []),
             "classes": classes_out,
             "covered": n_cov,
             "total": len(classes_out),
@@ -212,7 +227,7 @@ def build_overview(universe: list[dict], docs: list[dict]) -> dict:
     }
     umbrellas: dict[str, list] = defaultdict(list)
     for f in result_funds:
-        umbrellas[f["umbrella"] or "(ohne Umbrella)"].append(f)
+        umbrellas[f["umbrella"] or "(no umbrella)"].append(f)
     return {
         "totals": totals,
         "umbrellas": [{"name": k, "funds": v} for k, v in umbrellas.items()],

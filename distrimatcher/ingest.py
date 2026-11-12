@@ -52,7 +52,7 @@ def read_upload(filename: str, data: bytes) -> list[PdfFile]:
     if data[:4] == b"%PDF" or filename.lower().endswith(".pdf"):
         return [PdfFile(Path(filename).name, data)]
     if not zipfile.is_zipfile(io.BytesIO(data)):
-        raise ValueError(f"{filename}: weder ZIP noch PDF")
+        raise ValueError(f"{filename}: neither ZIP nor PDF")
     return list(_walk_zip(data, prefix=""))
 
 
@@ -71,7 +71,7 @@ def _walk_zip(data: bytes, prefix: str, depth: int = 0):
             count += 1
             total += info.file_size
             if count > MAX_FILES or total > MAX_TOTAL_BYTES:
-                raise ValueError("ZIP zu groß (Datei- oder Größenlimit überschritten)")
+                raise ValueError("ZIP too large (file count or size limit exceeded)")
             if info.file_size > MAX_PDF_BYTES:
                 continue
             name = prefix + "/".join(p for p in path.parts if p not in ("..", "/"))
@@ -136,6 +136,6 @@ def extract_pdf(data: bytes, ocr: str = "auto", lang: str = "deu+eng") -> Extrac
                     out.ocr_fixes.extend(fixes)
                     used_ocr = True
                 except Exception as exc:  # OCR-Fehler sollen den Import nicht abbrechen
-                    text = text + f"\n[OCR fehlgeschlagen: {exc}]"
+                    text = text + f"\n[OCR failed: {exc}]"
             out.pages.append(PageText(i, text, used_ocr))
     return out
