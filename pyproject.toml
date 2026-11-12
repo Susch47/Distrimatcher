@@ -1,0 +1,22 @@
+[project]
+name = "distrimatcher"
+version = "0.1.0"
+description = "Lokale Auswertung von Distribution Agreements (OCR, Extraktion) und Delta-Abgleich gegen öffentliche Fonds-/Share-Class-Daten"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+include = ["distrimatcher*"]
+
+[tool.setuptools.package-data]
+distrimatcher = ["static/*"]
+
+[project.scripts]
+distrimatcher = "distrimatcher.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

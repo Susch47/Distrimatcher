@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Distrimatcher</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4z" opacity=".9"/><path fill="none" stroke="currentColor" stroke-width="2" d="M14 16.5l2 2 4-4"/></svg>
+    <span>Distrimatcher</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="agreements" role="tab">1 · Agreements</button>
+    <button class="tab" data-tab="overview" role="tab">2 · Übersicht &amp; Delta</button>
+  </nav>
+  <div class="status" id="status" title="">lokal</div>
+</header>
+
+<main>
+  <!-- ========================= TEIL 1 ========================= -->
+  <section id="tab-agreements" class="panel active">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Distribution Agreements hochladen</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept=".zip,.pdf" multiple hidden>
+          <div class="drop-inner">
+            <strong>ZIP- oder PDF-Dateien hierher ziehen</strong>
+            <span>oder klicken zum Auswählen · verschachtelte ZIPs werden entpackt</span>
+          </div>
+        </label>
+        <div class="row">
+          <label>OCR
+            <select id="ocr">
+              <option value="auto">automatisch (nur gescannte Seiten)</option>
+              <option value="always">immer</option>
+              <option value="never">aus</option>
+            </select>
+          </label>
+          <span class="muted" id="upload-msg"></span>
+        </div>
+        <p class="hint">Alle Dateien werden ausschließlich lokal verarbeitet und gespeichert. Es werden keine Vertragsinhalte übertragen.</p>
+      </div>
+      <div class="card">
+        <h2>Abdeckung laut Verträgen</h2>
+        <div class="kpis" id="cov-kpis"></div>
+        <div class="row">
+          <a class="btn" href="/api/export/extraction.csv">Extraktion als CSV</a>
+          <a class="btn ghost" href="/api/export/extraction.json" download="distrimatcher_extraktion.json">JSON</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Dokumente</h2>
+        <input type="search" id="doc-filter" placeholder="Filtern …">
+      </div>
+      <div class="table-wrap">
+        <table class="data" id="doc-table">
+          <thead><tr>
+            <th>Datei</th><th>Status</th><th>Typ</th><th>Datum</th><th>Fondsgesellschaft</th><th>Distributor</th>
+            <th class="num">Funds</th><th class="num">Klassen</th><th class="num">ISINs</th><th class="num">Hinweise</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="empty" id="doc-empty">Noch keine Dokumente – lade eine ZIP-Datei mit Distribution Agreements hoch.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Funds &amp; Share Classes aus allen Verträgen</h2>
+        <input type="search" id="cov-filter" placeholder="Fund, Klasse oder ISIN …"></div>
+      <div id="cov-tree" class="tree"></div>
+    </div>
+  </section>
+
+  <!-- ========================= TEIL 2 ========================= -->
+  <section id="tab-overview" class="panel">
+    <div class="grid-3">
+      <div class="card">
+        <h3>SEC (US-Fonds)</h3>
+        <p class="hint">Series ID = Fund-ID, Class ID / Ticker = Share Class. Öffentlicher Datensatz der SEC.</p>
+        <div class="row"><button class="btn" id="sec-suggest">Vorschläge aus Verträgen</button></div>
+        <div class="row"><input type="search" id="sec-q" placeholder="Registrant suchen, z. B. Artisan"><button class="btn ghost" id="sec-search">Suchen</button></div>
+        <div id="sec-results" class="picklist"></div>
+      </div>
+      <div class="card">
+        <h3>GLEIF (LEI &amp; ISINs)</h3>
+        <p class="hint">Sucht für jeden erkannten Fund die LEI (= Fund-ID) und lädt die gemeldeten ISINs. Gut für EU-Fonds, aber unvollständig.</p>
+        <div class="row"><button class="btn" id="gleif-load">Für erkannte Funds laden</button></div>
+        <div id="gleif-report" class="small"></div>
+      </div>
+      <div class="card">
+        <h3>Eigene Liste (CSV / Excel)</h3>
+        <p class="hint">Spalten z. B. <code>Umbrella</code>, <code>Fund ID</code>, <code>Fund Name</code>, <code>Share Class</code>, <code>ISIN</code>, <code>Currency</code>.</p>
+        <label class="btn"><input type="file" id="imp-file" accept=".csv,.xlsx,.xlsm,.txt" hidden>Datei importieren …</label>
+        <div id="imp-msg" class="small"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Geladenes Universum</h2><button class="btn ghost small-btn" id="uni-clear">Alles entfernen</button></div>
+      <div id="uni-summary" class="small"></div>
+    </div>
+
+    <div class="card">
+      <div class="kpis" id="ov-kpis"></div>
+      <div class="toolbar">
+        <input type="search" id="ov-filter" placeholder="Fund, Fund-ID, Klasse, ISIN …">
+        <div class="seg" id="ov-status">
+          <button data-s="" class="on">Alle</button>
+          <button data-s="nicht abgedeckt">Delta</button>
+          <button data-s="prüfen">Prüfen</button>
+          <button data-s="abgedeckt">Abgedeckt</button>
+        </div>
+        <label class="chk"><input type="checkbox" id="ov-nodoc"> nur Funds ohne Agreement</label>
+        <span class="spacer"></span>
+        <a class="btn" href="/api/export/overview.csv?only_delta=true">Delta als CSV</a>
+        <a class="btn ghost" href="/api/export/overview.csv">Übersicht als CSV</a>
+      </div>
+      <div id="ov-tree" class="tree"></div>
+      <p class="empty" id="ov-empty">Noch kein Universum geladen – oben eine Datenquelle wählen.</p>
+    </div>
+
+    <div class="card" id="unmatched-card" hidden>
+      <h2>In Verträgen, aber nicht im Universum</h2>
+      <p class="hint">Diese Funds stehen in Agreements, wurden aber in den geladenen öffentlichen Daten nicht gefunden (anderer Name, geschlossen/fusioniert oder Quelle noch nicht geladen).</p>
+      <div id="unmatched" class="small"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Detailansicht -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h2 id="d-title">Dokument</h2>
+    <div class="row">
+      <a class="btn ghost" id="d-pdf" target="_blank">PDF öffnen</a>
+      <button class="btn ghost" id="d-reprocess">Neu auslesen</button>
+      <button class="btn danger ghost" id="d-delete">Löschen</button>
+      <button class="icon" id="d-close" aria-label="Schließen">✕</button>
+    </div>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
