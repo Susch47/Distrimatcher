@@ -1,0 +1,48 @@
+/* Screenshots of the single-file app for the brochure (2x, cropped).  node tools/screenshots.js <outDir> <secCsv> */
+const { chromium } = require("playwright");
+const path = require("path");
+(async () => {
+  const [out, secCsv] = process.argv.slice(2);
+  const root = path.join(__dirname, "../..");
+  const b = await chromium.launch();
+  const p = await (await b.newContext({ viewport: { width: 1360, height: 900 }, deviceScaleFactor: 2, acceptDownloads: true })).newPage();
+  const shot = async (name, sel, pad = 0) => {
+    const r = await p.$eval(sel, (el) => { const b = el.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, w: b.width, h: b.height }; });
+    await p.screenshot({ path: path.join(out, name + ".png"), fullPage: true, clip: { x: Math.max(0, r.x - pad), y: Math.max(0, r.y - pad), width: r.w + 2 * pad, height: Math.min(r.h + 2 * pad, 1300) } });
+  };
+  await p.goto("file://" + path.join(__dirname, "../dist/Distrimatcher.html")); await p.waitForTimeout(1200);
+  await p.screenshot({ path: path.join(out, "app-start.png") });
+  await p.setInputFiles("#file", path.join(root, "samples/demo_agreements.zip"));
+  await p.waitForFunction(() => document.querySelectorAll("#doc-table tbody tr").length >= 9 && ![...document.querySelectorAll("#doc-table tbody td:nth-child(2)")].some((td) => /reading|queued/.test(td.textContent)), null, { timeout: 240000 });
+  await p.waitForTimeout(500);
+  await p.evaluate(() => window.scrollTo(0, 0));
+  await p.screenshot({ path: path.join(out, "app-agreements.png"), clip: { x: 0, y: 0, width: 1360, height: 900 } });
+  await p.evaluate(() => window.scrollTo(0, document.querySelector("#cov-kpis").getBoundingClientRect().top + scrollY - 140));
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(out, "app-documents.png") });
+  await p.locator("#doc-table tbody tr", { hasText: "Alpenblick_Global" }).click(); await p.waitForTimeout(900);
+  await p.evaluate(() => { document.querySelector("#d-pdfsec").open = false; });
+  await shot("app-document", "#drawer");
+  await p.click("#d-close");
+  await p.click(".step[data-tab=overview]"); await p.waitForTimeout(500);
+  await p.setInputFiles("#sec-file", secCsv); await p.waitForFunction(() => /Dataset:/.test(document.querySelector("#sec-info").textContent), null, { timeout: 60000 });
+  await p.click("#sec-suggest"); await p.waitForSelector("#sec-load"); await p.waitForTimeout(3600);
+  await shot("app-sources", "#ov-body .sources", 10);
+  await p.click("#sec-load"); await p.waitForTimeout(2000);
+  await p.setInputFiles("#imp-file", path.join(root, "samples/public_data/synthetic_fund_universe.csv")); await p.waitForTimeout(2000);
+  await shot("app-waterfall", ".chart-wrap");
+  await p.selectOption("#ov-sort", "gaps"); await p.waitForTimeout(300);
+  await p.locator("#ov-tree details:not(.umb)").first().evaluate((d) => (d.open = true)); await p.waitForTimeout(200);
+  await shot("app-tree", "#ov-tree");
+  await p.click(".step[data-tab=watchlist]"); await p.waitForTimeout(1500);
+  await p.fill("#wl-filter", "Alpenblick"); await p.waitForTimeout(400);
+  await shot("app-watchlist", "#wl-body", 6);
+  await p.locator("#wl-table tbody tr").nth(0).locator("input").check(); await p.locator("#wl-table tbody tr").nth(1).locator("input").check();
+  await p.click("#wl-bulk-confirm"); await p.waitForTimeout(1000);
+  await p.click(".step[data-tab=email]"); await p.waitForTimeout(800);
+  await p.locator("#em-providers button", { hasText: "Alpenblick" }).click(); await p.waitForTimeout(800);
+  await shot("app-email", "#em-body", 6);
+  await p.click(".step[data-tab=log]"); await p.waitForTimeout(600);
+  await shot("app-log", "#tab-log", 6);
+  await b.close();
+})();

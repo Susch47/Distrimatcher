@@ -93,7 +93,11 @@ async function loadDocs() {
 }
 function poll() {
   clearTimeout(pollTimer);
-  loadDocs().then((d) => { if (d.some((x) => x.status === "queued" || x.status === "processing")) pollTimer = setTimeout(poll, 1200); else refreshWatchCount(); });
+  loadDocs().then((d) => {
+    if (d.some((x) => x.status === "queued" || x.status === "processing")) { pollTimer = setTimeout(poll, 1200); return; }
+    if (/being read/.test($("#upload-msg").textContent)) $("#upload-msg").textContent = `All ${d.length} agreement${d.length === 1 ? "" : "s"} read.`;
+    refreshWatchCount();
+  });
 }
 const statusBadge = (s) => ({ done: '<span class="badge b-ok">done</span>', error: '<span class="badge b-gap">error</span>', processing: '<span class="badge">reading …</span>', queued: '<span class="badge b-mute">queued</span>' }[s] || esc(s));
 

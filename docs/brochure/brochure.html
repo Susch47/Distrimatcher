@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Distrimatcher – Brochure & User Manual</title>
+<style>
+@font-face { font-family: "Montserrat"; font-weight: 300; src: url(../../distrimatcher/static/fonts/montserrat-latin-300-normal.woff2) format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 400; src: url(../../distrimatcher/static/fonts/montserrat-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 500; src: url(../../distrimatcher/static/fonts/montserrat-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 600; src: url(../../distrimatcher/static/fonts/montserrat-latin-600-normal.woff2) format("woff2"); }
+:root {
+  --abyss: #01161E; --teal: #124559; --mist: #598392; --sage: #AEC3B0; --foam: #EFF6E0; --coral: #D0603F;
+  --ink: #01161E; --text: #23343b; --muted: #5b6f76; --line: #d5ded8; --paper: #ffffff; --foam-2: #f6faef;
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font: 300 10.4pt/1.55 "Montserrat", Arial, sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; background: var(--paper); }
+.page:last-child { page-break-after: auto; }
+.pad { padding: 22mm 20mm 24mm; }
+h1, h2, h3, h4 { margin: 0; color: var(--ink); font-weight: 300; }
+h1 { font-size: 34pt; line-height: 1.08; letter-spacing: -0.02em; }
+h2 { font-size: 24pt; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 6mm; }
+h3 { font-size: 12.5pt; font-weight: 500; margin-bottom: 2mm; }
+b, strong { font-weight: 500; color: var(--ink); }
+p { margin: 0 0 3.2mm; }
+.eyebrow { font-size: 8pt; letter-spacing: .28em; text-transform: uppercase; color: var(--mist); font-weight: 500; margin-bottom: 4mm; }
+.lead { font-size: 13pt; line-height: 1.5; color: var(--text); max-width: 150mm; }
+.muted { color: var(--muted); } .small { font-size: 8.6pt; }
+.folio { position: absolute; bottom: 10mm; left: 20mm; right: 20mm; display: flex; justify-content: space-between; font-size: 7.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
+.folio .brand { display: flex; align-items: center; gap: 2.4mm; }
+.folio svg { width: 4.2mm; height: 4.2mm; }
+.rule { height: 1px; background: var(--line); margin: 6mm 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+.chip { display: inline-block; font-size: 7.6pt; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 1mm 2.6mm; border-radius: 99px; background: var(--foam); color: var(--teal); }
+.ic { width: 9mm; height: 9mm; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* cover */
+.cover { background: var(--abyss); color: var(--foam); }
+.cover h1 { color: var(--foam); font-size: 40pt; }
+.cover .lead { color: var(--sage); }
+.cover .eyebrow { color: var(--sage); }
+.waves { position: absolute; left: 0; right: 0; bottom: 0; height: 125mm; }
+.cover .meta { position: absolute; left: 20mm; bottom: 14mm; font-size: 8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--foam); opacity: .85; }
+
+/* section opener band */
+.band { background: var(--foam); margin: -22mm -20mm 10mm; padding: 22mm 20mm 10mm; }
+.statement { font-size: 19pt; line-height: 1.35; color: var(--ink); font-weight: 300; }
+.statement em { font-style: normal; color: var(--teal); font-weight: 500; }
+.kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 6mm; }
+.kpi { padding: 5mm 4mm; } .kpi + .kpi { border-left: 1px solid var(--line); }
+.kpi .v { font-size: 22pt; color: var(--teal); font-weight: 300; line-height: 1; }
+.kpi .l { font-size: 8.4pt; color: var(--muted); margin-top: 2mm; }
+.challenge li { margin-bottom: 2.4mm; }
+.challenge { padding-left: 4.5mm; margin: 0; }
+
+/* benefits */
+.benefit { border-top: 2px solid var(--teal); padding-top: 4mm; }
+.benefit .ic { color: var(--teal); margin-bottom: 3mm; }
+.benefit p { font-size: 9.4pt; color: var(--text); }
+.benefit.accent { border-top-color: var(--coral); } .benefit.accent .ic { color: var(--coral); }
+
+/* diagrams */
+.diagram { width: 100%; height: auto; display: block; }
+.legend { display: flex; gap: 6mm; flex-wrap: wrap; font-size: 8.4pt; color: var(--text); margin-top: 3mm; }
+.legend i { display: inline-block; width: 3.2mm; height: 3.2mm; border-radius: 1mm; margin-right: 1.6mm; vertical-align: -0.4mm; }
+
+/* manual */
+.shot { width: 100%; border: 1px solid var(--line); border-radius: 2mm; display: block; box-shadow: 0 2mm 6mm rgba(1, 22, 30, .08); }
+.shot.crop { height: 88mm; object-fit: cover; object-position: top left; }
+.step-head { display: flex; align-items: center; gap: 4mm; margin-bottom: 5mm; }
+.step-num { width: 12mm; height: 12mm; border-radius: 50%; background: var(--teal); color: var(--foam); display: grid; place-items: center; font-size: 15pt; font-weight: 400; flex: none; }
+.step-head h2 { margin: 0; }
+.howto { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+.howto li { counter-increment: s; position: relative; padding-left: 9mm; margin-bottom: 2.6mm; }
+.howto li::before { content: counter(s); position: absolute; left: 0; top: .2mm; width: 5.6mm; height: 5.6mm; border-radius: 50%; border: 1px solid var(--mist); color: var(--teal); font-size: 7.6pt; font-weight: 500; display: grid; place-items: center; }
+table.t { width: 100%; border-collapse: collapse; font-size: 8.6pt; }
+table.t th { text-align: left; font-weight: 500; color: var(--teal); border-bottom: 1px solid var(--sage); padding: 1.8mm 2mm; font-size: 7.8pt; letter-spacing: .06em; text-transform: uppercase; }
+table.t td { border-bottom: 1px solid var(--line); padding: 1.8mm 2mm; vertical-align: top; }
+.tip { background: var(--foam); border-left: 2px solid var(--teal); padding: 3.2mm 4mm; font-size: 9pt; margin-top: 4mm; }
+.tip.coral { border-left-color: var(--coral); }
+.status { display: inline-block; font-size: 7.6pt; padding: .6mm 2.4mm; border-radius: 99px; font-weight: 500; }
+.s-cov { background: #e4efe6; color: #2b6b47; } .s-gap { background: #f8e3dc; color: #a8452a; } .s-rev { background: #f6eed6; color: #81600d; }
+
+/* journey */
+.journey { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; margin: 6mm 0; }
+.j { background: var(--foam-2); border-radius: 2mm; padding: 4mm 3.4mm; position: relative; }
+.j .n { font-size: 20pt; color: var(--sage); font-weight: 300; line-height: 1; }
+.j h4 { font-size: 9.6pt; font-weight: 500; margin: 2mm 0 1.4mm; }
+.j p { font-size: 8pt; margin: 0; color: var(--muted); }
+
+/* brand page */
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-radius: 3mm; overflow: hidden; margin: 4mm 0 3mm; }
+.sw { height: 44mm; padding: 3.4mm; display: flex; flex-direction: column; justify-content: flex-end; font-size: 7.6pt; }
+.sw b { font-size: 9pt; display: block; color: inherit; font-weight: 500; }
+.usage { display: grid; grid-template-columns: 4fr 3fr 2fr 1fr; height: 7mm; border-radius: 1.6mm; overflow: hidden; margin-top: 2mm; }
+.logo-stage { display: grid; grid-template-columns: 1.6fr 1fr; gap: 5mm; }
+.stage { border-radius: 3mm; display: grid; place-items: center; padding: 8mm; }
+
+/* back cover */
+.back { background: var(--teal); color: var(--foam); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#124559"/><stop offset="1" stop-color="#01161E"/></linearGradient>
+    <linearGradient id="tile-l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#598392"/><stop offset="1" stop-color="#124559"/></linearGradient>
+    <symbol id="mark" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="url(#tile)"/><path d="M30 22 V74 H46 A26 26 0 0 0 68.5 61" fill="none" stroke="#EFF6E0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 22 H46 A26 26 0 0 1 68.5 35" fill="none" stroke="#EFF6E0" stroke-width="7" stroke-linecap="round"/><circle cx="72" cy="48" r="5.5" fill="#D0603F"/><path d="M39 49 l6 6 l11 -13" fill="none" stroke="#AEC3B0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="mark-l" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="url(#tile-l)"/><path d="M30 22 V74 H46 A26 26 0 0 0 68.5 61" fill="none" stroke="#EFF6E0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 22 H46 A26 26 0 0 1 68.5 35" fill="none" stroke="#EFF6E0" stroke-width="7" stroke-linecap="round"/><circle cx="72" cy="48" r="5.5" fill="#D0603F"/><path d="M39 49 l6 6 l11 -13" fill="none" stroke="#AEC3B0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v5c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-5M5 11.5v5c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12 2.3 2.3 4.2-4.6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6 8.5 7 8.5-7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================ 1 COVER -->
+<section class="page cover">
+  <div class="pad">
+    <svg viewBox="0 0 520 112" style="width:96mm;height:auto"><use href="#mark-l" x="8" y="8" width="96" height="96"/>
+      <text x="124" y="66" font-family="Montserrat" font-size="46" fill="#EFF6E0" letter-spacing="-0.5"><tspan font-weight="300">Distri</tspan><tspan font-weight="600">matcher</tspan></text>
+      <text x="126" y="92" font-family="Montserrat" font-size="13" font-weight="400" fill="#AEC3B0" letter-spacing="3.2">AGREEMENT COVERAGE, MADE VISIBLE</text></svg>
+    <div style="margin-top:34mm">
+      <div class="eyebrow">Product brochure &amp; user manual</div>
+      <h1>Every share class.<br>Every agreement.<br><span style="color:var(--sage)">No blind spots.</span></h1>
+      <p class="lead" style="margin-top:8mm;max-width:130mm">Distrimatcher reads your distribution agreements, compares them with the fund universe and shows every retro-paying share class that is not yet covered.</p>
+    </div>
+  </div>
+  <svg class="waves" viewBox="0 0 210 125" preserveAspectRatio="none">
+    <path d="M0 46 C30 34 55 58 90 48 S150 26 210 40 V125 H0Z" fill="#124559"/>
+    <path d="M0 66 C35 54 60 78 100 68 S160 48 210 60 V125 H0Z" fill="#598392" opacity=".9"/>
+    <path d="M0 86 C40 76 70 96 110 88 S170 70 210 80 V125 H0Z" fill="#AEC3B0" opacity=".85"/>
+    <path d="M0 104 C45 96 80 112 120 106 S175 94 210 100 V125 H0Z" fill="#EFF6E0"/>
+    <circle cx="168" cy="73" r="3.2" fill="#D0603F"/>
+  </svg>
+  <div class="meta" style="color:var(--teal)">Version 0.3 · November 2026 · Single-file edition</div>
+</section>
+
+<!-- ============================================================ 2 BUSINESS GOAL -->
+<section class="page">
+  <div class="pad">
+    <div class="band">
+      <div class="eyebrow">Business goal</div>
+      <p class="statement">Make sure that <em>every share class we distribute and that pays retrocessions is covered by a valid distribution agreement</em>, and close every gap quickly, with full transparency for distribution, product management and compliance.</p>
+    </div>
+    <div class="grid2">
+      <div>
+        <h3>The challenge</h3>
+        <ul class="challenge">
+          <li><b>Agreements are documents, not data.</b> Fund lists sit in schedules, annexes, amendments and side letters, often as scanned PDFs.</li>
+          <li><b>The fund universe keeps moving.</b> Providers launch, rename, merge and close share classes every month.</li>
+          <li><b>Gaps cost money and create risk.</b> A share class that is not in the schedule can mean missing trail commissions, or distribution without a contractual basis.</li>
+          <li><b>Manual checks do not scale.</b> Comparing hundreds of ISINs against PDF schedules is slow and error-prone.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The answer</h3>
+        <p>Distrimatcher turns agreements into structured data, matches them against public and internal fund data, and produces a prioritised list of uncovered, retro-paying share classes, with a pre-written e-mail to the provider.</p>
+        <p>It runs as <b>one HTML file</b> in the browser: no installation, no server and no data transfer. That fits even very restrictive bank IT environments.</p>
+        <div class="tip">Focus: share classes that <b>pay retrocessions</b>. Clean share classes can be shown or hidden with one switch.</div>
+      </div>
+    </div>
+    <h3 style="margin-top:9mm">What success looks like</h3>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">100%</div><div class="l">of retro-paying share classes in distribution covered by an agreement</div></div>
+      <div class="kpi"><div class="v">Days → minutes</div><div class="l">to check a provider’s full agreement set against the current fund universe</div></div>
+      <div class="kpi"><div class="v">One view</div><div class="l">per provider: coverage, gaps, decisions and correspondence, auditable in the activity log</div></div>
+    </div>
+    <p class="small muted" style="margin-top:3mm">Target values. Actual effort savings depend on agreement volume and document quality.</p>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Business goal · 2</span></div>
+</section>
+
+<!-- ============================================================ 3 BENEFITS -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Benefits</div>
+    <h2>Why teams use Distrimatcher</h2>
+    <p class="lead" style="margin-bottom:10mm">From a folder of PDFs to a clear, actionable list in four steps. These are the six things you get.</p>
+    <div class="grid2" style="row-gap:10mm">
+      <div class="benefit accent"><svg class="ic"><use href="#i-coin"/></svg><h3>Secured retrocession income</h3><p>Every retro-paying share class without an agreement is flagged. No trail commission is lost because a class is missing from a schedule.</p></div>
+      <div class="benefit"><svg class="ic"><use href="#i-shield"/></svg><h3>Compliance &amp; audit readiness</h3><p>Distribute only what is contractually covered. Each decision (confirm, dismiss, add to agreement) is logged with a timestamp, and evidence links back to the agreement and the source.</p></div>
+      <div class="benefit"><svg class="ic"><use href="#i-clock"/></svg><h3>Hours instead of weeks</h3><p>ZIP upload, automatic reading of schedules and annexes (including scanned PDFs via OCR) and automatic matching by ISIN, fund name and share class replace manual cross-checking.</p></div>
+      <div class="benefit"><svg class="ic"><use href="#i-eye"/></svg><h3>Transparency at a glance</h3><p>A waterfall from fund IDs to gaps, and coverage per umbrella, fund and share class. Sort, filter and export to Excel in one click.</p></div>
+      <div class="benefit"><svg class="ic"><use href="#i-mail"/></svg><h3>Faster provider follow-up</h3><p>A pre-written, professional e-mail (English or German) listing the uncovered ISINs, ready to open in Outlook. This shortens the path to an amendment.</p></div>
+      <div class="benefit"><svg class="ic"><use href="#i-lock"/></svg><h3>Zero IT footprint, zero data leakage</h3><p>One HTML file, opened in Edge or Chrome. Nothing to install, no server and no cloud. Agreements never leave the computer.</p></div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Benefits · 3</span></div>
+</section>
+
+<!-- ============================================================ 4 BUSINESS CONCEPT -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Concept · Business view</div>
+    <h2>From agreement to closed gap</h2>
+    <p class="lead" style="margin-bottom:6mm">Distrimatcher connects three worlds: the contracts you hold, the share classes that exist, and the decisions that close the gap.</p>
+    <svg class="diagram" viewBox="0 0 680 600" font-family="Montserrat">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#598392"/></marker>
+        <marker id="arc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D0603F"/></marker>
+      </defs>
+      <!-- inputs -->
+      <g>
+        <rect x="10" y="20" width="200" height="120" rx="14" fill="#EFF6E0"/>
+        <text x="30" y="52" font-size="11" letter-spacing="2.4" fill="#598392" font-weight="500">WHAT WE SIGNED</text>
+        <text x="30" y="80" font-size="17" fill="#01161E">Distribution agreements</text>
+        <text x="30" y="102" font-size="12" fill="#5b6f76">Schedules, annexes,</text>
+        <text x="30" y="119" font-size="12" fill="#5b6f76">amendments, scans</text>
+      </g>
+      <g>
+        <rect x="470" y="20" width="200" height="120" rx="14" fill="#EFF6E0"/>
+        <text x="490" y="52" font-size="11" letter-spacing="2.4" fill="#598392" font-weight="500">WHAT EXISTS</text>
+        <text x="490" y="80" font-size="17" fill="#01161E">Fund universe</text>
+        <text x="490" y="102" font-size="12" fill="#5b6f76">Fund IDs, ISINs, retro</text>
+        <text x="490" y="119" font-size="12" fill="#5b6f76">SIX lists · SEC · GLEIF</text>
+      </g>
+      <!-- engine -->
+      <g>
+        <rect x="215" y="190" width="250" height="150" rx="18" fill="#124559"/>
+        <use href="#mark-l" x="235" y="210" width="34" height="34"/>
+        <text x="279" y="233" font-size="17" fill="#EFF6E0"><tspan font-weight="300">Distri</tspan><tspan font-weight="600">matcher</tspan></text>
+        <text x="235" y="270" font-size="12" fill="#AEC3B0">1  Read &amp; extract (OCR)</text>
+        <text x="235" y="290" font-size="12" fill="#AEC3B0">2  Match by ISIN · name · class</text>
+        <text x="235" y="310" font-size="12" fill="#AEC3B0">3  Flag retro-paying gaps</text>
+        <text x="235" y="328" font-size="12" fill="#AEC3B0">4  Draft provider e-mail</text>
+      </g>
+      <path d="M110 140 C110 200 160 240 213 255" fill="none" stroke="#598392" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M570 140 C570 200 520 240 467 255" fill="none" stroke="#598392" stroke-width="2" marker-end="url(#ar)"/>
+      <!-- outputs -->
+      <g>
+        <rect x="10" y="400" width="200" height="110" rx="14" fill="#ffffff" stroke="#AEC3B0"/>
+        <circle cx="34" cy="432" r="6" fill="#124559"/>
+        <text x="48" y="437" font-size="14" fill="#01161E">Covered</text>
+        <text x="30" y="462" font-size="12" fill="#5b6f76">Evidence per share class:</text>
+        <text x="30" y="479" font-size="12" fill="#5b6f76">which agreement</text>
+      </g>
+      <g>
+        <rect x="240" y="400" width="200" height="110" rx="14" fill="#ffffff" stroke="#D0603F" stroke-width="1.6"/>
+        <circle cx="264" cy="432" r="6" fill="#D0603F"/>
+        <text x="278" y="437" font-size="14" fill="#01161E">Gap (retro-paying)</text>
+        <text x="260" y="462" font-size="12" fill="#5b6f76">Watchlist: confirm, dismiss</text>
+        <text x="260" y="479" font-size="12" fill="#5b6f76">or add to agreement</text>
+      </g>
+      <g>
+        <rect x="470" y="400" width="200" height="110" rx="14" fill="#ffffff" stroke="#AEC3B0"/>
+        <circle cx="494" cy="432" r="6" fill="#598392"/>
+        <text x="508" y="437" font-size="14" fill="#01161E">Provider e-mail</text>
+        <text x="490" y="462" font-size="12" fill="#5b6f76">Uncovered ISINs, ready</text>
+        <text x="490" y="479" font-size="12" fill="#5b6f76">to send from Outlook</text>
+      </g>
+      <path d="M260 340 L130 398" fill="none" stroke="#598392" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M340 340 L340 398" fill="none" stroke="#D0603F" stroke-width="2" marker-end="url(#arc)"/>
+      <path d="M440 455 L468 455" fill="none" stroke="#D0603F" stroke-width="2" marker-end="url(#arc)"/>
+      <!-- loop back -->
+      <path d="M570 510 C570 575 110 575 110 512" fill="none" stroke="#AEC3B0" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+      <rect x="230" y="548" width="220" height="30" rx="15" fill="#EFF6E0"/>
+      <text x="340" y="568" font-size="12" fill="#124559" text-anchor="middle" font-weight="500">Amendment signed → covered</text>
+    </svg>
+    <div class="grid3" style="margin-top:4mm">
+      <div><h3>Distribution &amp; product</h3><p class="small">See which share classes can be offered and where income is at risk.</p></div>
+      <div><h3>Fund providers</h3><p class="small">Receive a precise, consolidated request instead of ad-hoc questions.</p></div>
+      <div><h3>Compliance &amp; audit</h3><p class="small">Traceable evidence and a full activity log for every decision.</p></div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Business concept · 4</span></div>
+</section>
+
+<!-- ============================================================ 5 ARCHITECTURE -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Concept · Architecture</div>
+    <h2>One file. Your browser. Nothing leaves.</h2>
+    <p class="lead" style="margin-bottom:6mm">The whole application, including PDF reader, OCR engine, rules and database, is packed into a single HTML file. It runs in Microsoft Edge or Google Chrome on your own PC.</p>
+    <svg class="diagram" viewBox="0 0 680 560" font-family="Montserrat">
+      <defs>
+        <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#598392"/></marker>
+      </defs>
+      <!-- trust boundary -->
+      <rect x="150" y="20" width="380" height="520" rx="22" fill="#f6faef" stroke="#124559" stroke-width="1.6" stroke-dasharray="7 6"/>
+      <text x="170" y="48" font-size="11" letter-spacing="2.4" fill="#124559" font-weight="500">YOUR PC · BROWSER (EDGE / CHROME)</text>
+      <!-- html file -->
+      <rect x="175" y="64" width="330" height="330" rx="16" fill="#124559"/>
+      <use href="#mark-l" x="193" y="80" width="28" height="28"/>
+      <text x="229" y="100" font-size="14" fill="#EFF6E0">Distrimatcher.html</text>
+      <text x="390" y="100" font-size="10.5" fill="#AEC3B0">≈ 12 MB, offline</text>
+      <g font-size="11.5">
+        <rect x="193" y="120" width="294" height="44" rx="9" fill="#EFF6E0"/>
+        <text x="207" y="139" fill="#01161E" font-weight="500">User interface</text><text x="207" y="155" fill="#5b6f76">Agreements · Overview · Watchlist · E-mail · Log</text>
+        <rect x="193" y="172" width="143" height="52" rx="9" fill="#598392"/>
+        <text x="205" y="193" fill="#ffffff" font-weight="500">PDF reader</text><text x="205" y="210" fill="#EFF6E0">pdf.js · tables</text>
+        <rect x="344" y="172" width="143" height="52" rx="9" fill="#598392"/>
+        <text x="356" y="193" fill="#ffffff" font-weight="500">OCR engine</text><text x="356" y="210" fill="#EFF6E0">Tesseract · DE + EN</text>
+        <rect x="193" y="232" width="143" height="52" rx="9" fill="#598392"/>
+        <text x="205" y="253" fill="#ffffff" font-weight="500">Extraction rules</text><text x="205" y="270" fill="#EFF6E0">parties · funds · ISINs</text>
+        <rect x="344" y="232" width="143" height="52" rx="9" fill="#598392"/>
+        <text x="356" y="253" fill="#ffffff" font-weight="500">Matching &amp; retro</text><text x="356" y="270" fill="#EFF6E0">ISIN · name · class</text>
+        <rect x="193" y="292" width="294" height="44" rx="9" fill="#AEC3B0"/>
+        <text x="207" y="311" fill="#01161E" font-weight="500">Local data store (IndexedDB)</text><text x="207" y="327" fill="#23343b">agreements · PDFs · universe · decisions · log</text>
+        <text x="193" y="370" fill="#AEC3B0" font-size="10.5">No installation · no server · no admin rights · no cloud</text>
+      </g>
+      <!-- project file -->
+      <rect x="175" y="420" width="330" height="48" rx="12" fill="#ffffff" stroke="#AEC3B0"/>
+      <text x="193" y="442" font-size="12.5" fill="#01161E" font-weight="500">Project file (.json)</text>
+      <text x="193" y="458" font-size="11" fill="#5b6f76">Save / open: backup, hand-over, second PC</text>
+      <path d="M340 394 V418" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+      <text x="175" y="505" font-size="11" fill="#124559">Agreement content never leaves this boundary.</text>
+      <!-- inputs left -->
+      <g font-size="11.5">
+        <text x="10" y="92" font-size="10.5" letter-spacing="2" fill="#598392" font-weight="500">FILES IN</text>
+        <rect x="10" y="104" width="120" height="46" rx="10" fill="#EFF6E0"/><text x="22" y="124" fill="#01161E">Agreements</text><text x="22" y="140" fill="#5b6f76" font-size="10.5">ZIP / PDF / scans</text>
+        <rect x="10" y="162" width="120" height="46" rx="10" fill="#EFF6E0"/><text x="22" y="182" fill="#01161E">Fund lists</text><text x="22" y="198" fill="#5b6f76" font-size="10.5">CSV / Excel, SIX</text>
+        <rect x="10" y="220" width="120" height="46" rx="10" fill="#EFF6E0"/><text x="22" y="240" fill="#01161E">SEC dataset</text><text x="22" y="256" fill="#5b6f76" font-size="10.5">CSV (US funds)</text>
+        <path d="M130 127 H173" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+        <path d="M130 185 H173" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+        <path d="M130 243 H173" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+      </g>
+      <!-- outputs right -->
+      <g font-size="11.5">
+        <text x="550" y="92" font-size="10.5" letter-spacing="2" fill="#598392" font-weight="500">FILES OUT</text>
+        <rect x="550" y="104" width="120" height="46" rx="10" fill="#EFF6E0"/><text x="562" y="124" fill="#01161E">Excel / CSV</text><text x="562" y="140" fill="#5b6f76" font-size="10.5">gaps, overview</text>
+        <rect x="550" y="162" width="120" height="46" rx="10" fill="#EFF6E0"/><text x="562" y="182" fill="#01161E">E-mail (.eml)</text><text x="562" y="198" fill="#5b6f76" font-size="10.5">opens in Outlook</text>
+        <path d="M507 127 H548" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+        <path d="M507 185 H548" stroke="#598392" stroke-width="2" marker-end="url(#a2)"/>
+        <!-- optional internet -->
+        <text x="550" y="300" font-size="10.5" letter-spacing="2" fill="#D0603F" font-weight="500">OPTIONAL ONLINE</text>
+        <rect x="550" y="312" width="120" height="58" rx="10" fill="#ffffff" stroke="#D0603F" stroke-dasharray="4 4"/>
+        <text x="562" y="333" fill="#01161E">GLEIF API</text><text x="562" y="349" fill="#5b6f76" font-size="10.5">fund name → LEI,</text><text x="562" y="363" fill="#5b6f76" font-size="10.5">ISINs (public data)</text>
+        <path d="M507 340 H548" stroke="#D0603F" stroke-width="1.6" stroke-dasharray="4 4" marker-end="url(#a2)"/>
+      </g>
+    </svg>
+    <div class="grid3" style="margin-top:2mm">
+      <div><h3>Security by design</h3><p class="small">Runs in the browser sandbox. There is no backend, no account and no telemetry.</p></div>
+      <div><h3>Works offline</h3><p class="small">All libraries and OCR language data are embedded. Only GLEIF needs internet, and it is optional.</p></div>
+      <div><h3>Same logic, tested</h3><p class="small">Automated tests check the extraction against reference results for every build.</p></div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Architecture · 5</span></div>
+</section>
+
+<!-- ============================================================ 6 WATERFALL -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Reading the results</div>
+    <h2>The coverage waterfall</h2>
+    <p class="lead" style="margin-bottom:8mm">One chart answers the key question: how many retro-paying share classes exist, how many are covered, and how many gaps remain?</p>
+    <svg class="diagram" viewBox="0 0 680 330" font-family="Montserrat">
+      <rect x="0" y="0" width="680" height="330" rx="14" fill="#f6faef"/>
+      <g stroke="#d5ded8" stroke-dasharray="2 4"><line x1="30" x2="650" y1="80" y2="80"/><line x1="30" x2="650" y1="140" y2="140"/><line x1="30" x2="650" y1="200" y2="200"/></g>
+      <line x1="30" x2="650" y1="260" y2="260" stroke="#AEC3B0"/>
+      <!-- scale: 102 -> 200px ; y = 260 - v*1.96 -->
+      <rect x="62" y="154" width="76" height="106" rx="4" fill="#AEC3B0"/>
+      <rect x="186" y="60" width="76" height="200" rx="4" fill="#124559"/>
+      <rect x="310" y="99" width="76" height="161" rx="4" fill="#AEC3B0"/>
+      <rect x="434" y="60" width="76" height="123" rx="4" fill="#124559" opacity=".45"/>
+      <rect x="558" y="184" width="76" height="76" rx="4" fill="#D0603F"/>
+      <line x1="262" x2="434" y1="60" y2="60" stroke="#598392" stroke-dasharray="3 3"/>
+      <line x1="510" x2="558" y1="184" y2="184" stroke="#598392" stroke-dasharray="3 3"/>
+      <g font-size="17" fill="#01161E" text-anchor="middle"><text x="100" y="146">54</text><text x="224" y="52">102</text><text x="348" y="91">82</text><text x="472" y="52">−63</text><text x="596" y="176">39</text></g>
+      <g font-size="12" fill="#01161E" text-anchor="middle"><text x="100" y="284">Fund IDs</text><text x="224" y="284">ISINs</text><text x="348" y="284">Found in agreements</text><text x="472" y="284">In agreement</text><text x="596" y="284">Gaps</text></g>
+      <g font-size="10.5" fill="#5b6f76" text-anchor="middle"><text x="100" y="301">funds in data</text><text x="224" y="301">share classes</text><text x="348" y="301">extracted</text><text x="472" y="301">covered</text><text x="596" y="301">not covered</text></g>
+    </svg>
+    <div class="legend"><span><i style="background:#AEC3B0"></i>Context</span><span><i style="background:#124559"></i>ISINs in scope</span><span><i style="background:#124559;opacity:.45"></i>Covered (subtracted)</span><span><i style="background:#D0603F"></i>Gaps</span><span class="muted">Example: demo data set, “Retro only” switched on</span></div>
+    <div class="rule"></div>
+    <div class="grid2">
+      <div>
+        <h3>How to read it</h3>
+        <ul class="challenge small">
+          <li><b>Fund IDs</b>: funds in the loaded public / internal data</li>
+          <li><b>ISINs</b>: their share classes in scope (retro-paying or unknown)</li>
+          <li><b>Found in agreements</b>: share classes extracted from your PDFs</li>
+          <li><b>In agreement</b>: universe share classes matched to an agreement</li>
+          <li><b>Gaps</b> = ISINs − in agreement. This is your to-do list.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Status of each share class</h3>
+        <p class="small"><span class="status s-cov">covered</span> matched by ISIN, by class name, or because the agreement covers all share classes.</p>
+        <p class="small"><span class="status s-gap">gap</span> not covered by any agreement: goes to the watchlist.</p>
+        <p class="small"><span class="status s-rev">review</span> the fund is named, but its share classes are not specified.</p>
+        <p class="small muted">Retro status in order of priority: data (import) → agreement clause → assumed from the class name.</p>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Results · 6</span></div>
+</section>
+
+<!-- ============================================================ 7 GETTING STARTED -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">User manual</div>
+    <h2>Getting started in two minutes</h2>
+    <div class="grid2">
+      <div>
+        <h3>What you need</h3>
+        <ul class="challenge small">
+          <li>Windows PC with Microsoft Edge or Google Chrome</li>
+          <li>The file <b>Distrimatcher.html</b> (one file, about 12 MB)</li>
+          <li>Your agreements as PDF or ZIP</li>
+          <li>Optional: a fund list with ISINs and retrocession info (CSV / Excel), e.g. a SIX Fund Data export</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Start</h3>
+        <ol class="howto small">
+          <li>Save <b>Distrimatcher.html</b> in any folder.</li>
+          <li>Double-click it. It opens in your browser and starts empty.</li>
+          <li>Follow the five steps at the top of the screen.</li>
+          <li>Use <b>Save project</b> regularly and keep the project file next to the HTML file.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="journey">
+      <div class="j"><div class="n">1</div><h4>Agreements</h4><p>Drop a ZIP. PDFs and scans are read automatically.</p></div>
+      <div class="j"><div class="n">2</div><h4>Overview</h4><p>Load fund data and see coverage and gaps.</p></div>
+      <div class="j"><div class="n">3</div><h4>Watchlist</h4><p>Confirm, dismiss or add gaps to an agreement.</p></div>
+      <div class="j"><div class="n">4</div><h4>E-mail</h4><p>Send the uncovered ISINs to the provider.</p></div>
+      <div class="j"><div class="n">5</div><h4>Activity log</h4><p>Every step with a timestamp, plus data reset.</p></div>
+    </div>
+    <img class="shot crop" src="img/app-start.png" alt="Start screen">
+    <div class="tip" style="margin-top:5mm"><b>Where is my data?</b> In this browser on this PC. It is still there when you reopen the file. <b>Save project</b> writes everything (PDFs, data, decisions, log) into one file. <b>Open project</b> restores it, also on another PC.</div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Getting started · 7</span></div>
+</section>
+
+<!-- ============================================================ 8 STEP 1 -->
+<section class="page">
+  <div class="pad">
+    <div class="step-head"><div class="step-num">1</div><div><div class="eyebrow" style="margin:0">Step 1</div><h2>Upload agreements</h2></div></div>
+    <img class="shot crop" style="height:92mm" src="img/app-documents.png" alt="Agreements">
+    <div class="grid2" style="margin-top:6mm">
+      <div>
+        <h3>How it works</h3>
+        <ol class="howto small">
+          <li>Drag a <b>ZIP</b> (nested ZIPs are fine) or single <b>PDFs</b> onto the upload area.</li>
+          <li>Every PDF is read: text directly, scanned pages via <b>OCR</b>.</li>
+          <li>Click a row to open the details: extracted terms, parties, retrocession clause, funds and classes, and the original PDF.</li>
+          <li>Wrong value? Correct it in the JSON editor and save.</li>
+        </ol>
+        <div class="tip small">OCR-damaged ISINs are corrected <b>only if the check digit confirms it</b>. Corrections are shown as a note.</div>
+      </div>
+      <div>
+        <h3>What is extracted</h3>
+        <table class="t">
+          <tr><th>Field</th><th>Example</th></tr>
+          <tr><td>Parties &amp; roles</td><td>Fund entity, distributor, management company</td></tr>
+          <tr><td>Date, law, jurisdiction</td><td>15 March 2024 · Luxembourg</td></tr>
+          <tr><td>Territory, exclusivity</td><td>CH, DE, AT · non-exclusive</td></tr>
+          <tr><td>Notice period, term</td><td>90 days · indefinite</td></tr>
+          <tr><td>Retrocession</td><td>40% of management fee; I-classes excluded</td></tr>
+          <tr><td>Funds &amp; classes</td><td>from schedules, tables and text</td></tr>
+          <tr><td>Identifiers</td><td>ISIN, LEI (check digits verified)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Step 1 · 8</span></div>
+</section>
+
+<!-- ============================================================ 9 STEP 2 -->
+<section class="page">
+  <div class="pad">
+    <div class="step-head"><div class="step-num">2</div><div><div class="eyebrow" style="margin:0">Step 2</div><h2>Load fund data &amp; see the gaps</h2></div></div>
+    <img class="shot" src="img/app-sources.png" alt="Data sources">
+    <table class="t" style="margin-top:5mm">
+      <tr><th>Source</th><th>What you get</th><th>Best for</th></tr>
+      <tr><td><b>File import</b> (CSV / Excel)</td><td>Fund ID, ISIN, share class, currency and retrocession, exactly as in your list</td><td>SIX Fund Data exports, management company lists</td></tr>
+      <tr><td><b>SEC dataset</b> (CSV)</td><td>Fund ID = series ID, class ID and ticker. Use <i>Suggest from agreements</i> to find the registrant</td><td>US mutual funds</td></tr>
+      <tr><td><b>GLEIF</b> (online)</td><td>LEI per fund and the ISINs reported to GLEIF</td><td>EU funds (often incomplete)</td></tr>
+    </table>
+    <img class="shot" style="margin-top:6mm" src="img/app-waterfall.png" alt="Waterfall">
+    <p class="small" style="margin-top:4mm">Below the chart: umbrella → fund → share class with status, retro flag and the matching agreement. Filter by <b>Gaps</b>, switch <b>Retro only</b> on or off, sort by name, fund ID, most gaps or lowest coverage, and export <b>Retro gaps CSV</b> for Excel.</p>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Step 2 · 9</span></div>
+</section>
+
+<!-- ============================================================ 10 STEP 3 -->
+<section class="page">
+  <div class="pad">
+    <div class="step-head"><div class="step-num">3</div><div><div class="eyebrow" style="margin:0">Step 3</div><h2>Decide in the watchlist</h2></div></div>
+    <img class="shot crop" style="height:118mm" src="img/app-watchlist.png" alt="Watchlist">
+    <div class="grid2" style="margin-top:6mm">
+      <div>
+        <h3>Every gap, with evidence</h3>
+        <ul class="challenge small">
+          <li><b>Features</b> (heuristic): retail or institutional, currency, hedged, clean share, accumulating or distributing</li>
+          <li><b>Source</b>: where the ISIN was found (file and row, SEC record, GLEIF), with the ISIN highlighted</li>
+          <li><b>Found</b>: first seen; <b>new</b> marks the last 7 days</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Actions</h3>
+        <table class="t">
+          <tr><td><b>Confirm</b></td><td>Real gap: raise it with the provider</td></tr>
+          <tr><td><b>Dismiss</b></td><td>Not relevant, e.g. not for distribution</td></tr>
+          <tr><td><b>Add to agreement</b></td><td>Covered elsewhere (side letter): counts as covered</td></tr>
+          <tr><td><b>Open agreement</b></td><td>Shows the related agreement and its PDF</td></tr>
+        </table>
+        <p class="small muted" style="margin-top:2mm">Tick several rows to confirm or dismiss them in one go.</p>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Step 3 · 10</span></div>
+</section>
+
+<!-- ============================================================ 11 STEP 4 + 5 -->
+<section class="page">
+  <div class="pad">
+    <div class="step-head"><div class="step-num">4</div><div><div class="eyebrow" style="margin:0">Step 4</div><h2>Write to the provider</h2></div></div>
+    <img class="shot crop" style="height:96mm" src="img/app-email.png" alt="Provider e-mail">
+    <ol class="howto small" style="margin-top:5mm;columns:2;column-gap:10mm">
+      <li>Choose the provider (umbrella / fund house).</li>
+      <li>Include <i>confirmed only</i> or <i>all open</i>, and optionally <i>retro-paying only</i>.</li>
+      <li>Pick English or German and review the pre-written text.</li>
+      <li><b>Download .eml</b>: opens as a draft in Outlook. You can also open it in your mail app or copy the text.</li>
+    </ol>
+    <div class="rule"></div>
+    <div class="step-head"><div class="step-num">5</div><div><div class="eyebrow" style="margin:0">Step 5</div><h2>Activity log</h2></div></div>
+    <div class="grid2">
+      <p class="small">Uploads, extractions, data loads, watchlist decisions and e-mails, all with timestamps. It is your audit trail.</p>
+      <p class="small"><b>Reset all data</b> starts from scratch. Save a project file first if you want to keep the current state.</p>
+    </div>
+    <img class="shot crop" style="height:62mm;margin-top:4mm" src="img/app-log.png" alt="Activity log">
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Steps 4 &amp; 5 · 11</span></div>
+</section>
+
+<!-- ============================================================ 12 DATA PROTECTION & FAQ -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Data protection &amp; FAQ</div>
+    <h2>Built for restrictive IT environments</h2>
+    <div class="grid2" style="row-gap:7mm">
+      <div><h3>Does any agreement data leave my PC?</h3><p class="small">No. Reading, OCR, extraction and matching run inside the browser. There is no server and no upload. The only optional online call (GLEIF) sends public fund names, never document content.</p></div>
+      <div><h3>Do I need admin rights or an installation?</h3><p class="small">No. Distrimatcher is a single HTML file. If your PC can open a web page in Edge or Chrome, it can run Distrimatcher.</p></div>
+      <div><h3>Where is my data stored?</h3><p class="small">In the browser storage of this PC. <b>Save project</b> creates a portable file. Clearing the browser’s site data deletes the in-browser copy.</p></div>
+      <div><h3>How reliable is the extraction?</h3><p class="small">It is rule-based and tested on public SEC agreements and sample EU agreements. ISINs and LEIs are verified by check digit. Unusual layouts are flagged as notes for manual review.</p></div>
+      <div><h3>Where do retrocession flags come from?</h3><p class="small">From your imported data first (e.g. a SIX export with a retrocession column), then from the agreement’s retrocession clause, and only as a last resort from the share class name (marked as <i>assumed</i>).</p></div>
+      <div><h3>Can the manual be adapted?</h3><p class="small">Yes. The in-app manual can be edited, downloaded as a text file and loaded again. This brochure is generated from an editable HTML source.</p></div>
+    </div>
+    <div class="tip coral" style="margin-top:9mm"><b>Good practice:</b> save a project file after each review session and store it on your team drive. It holds the agreements, the decisions and the complete activity log.</div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Data protection · 12</span></div>
+</section>
+
+<!-- ============================================================ 13 BRAND -->
+<section class="page">
+  <div class="pad">
+    <div class="eyebrow">Brand identity</div>
+    <h2>Logo &amp; colour concept</h2>
+    <div class="logo-stage">
+      <div class="stage" style="background:var(--foam)">
+        <svg viewBox="0 0 520 112" style="width:100%;height:auto"><use href="#mark" x="8" y="8" width="96" height="96"/>
+          <text x="124" y="66" font-family="Montserrat" font-size="46" fill="#01161E" letter-spacing="-0.5"><tspan font-weight="300">Distri</tspan><tspan font-weight="600">matcher</tspan></text>
+          <text x="126" y="92" font-family="Montserrat" font-size="13" font-weight="400" fill="#598392" letter-spacing="3.2">AGREEMENT COVERAGE, MADE VISIBLE</text></svg>
+      </div>
+      <div class="stage" style="background:var(--abyss)"><svg viewBox="0 0 96 96" style="width:34mm;height:34mm"><use href="#mark-l"/></svg></div>
+    </div>
+    <p class="small" style="margin-top:5mm"><b>The mark.</b> A “D” whose outline is not closed. In the gap sits a coral dot: the missing share class that Distrimatcher finds. The sage check stands for coverage that is confirmed. The wordmark sets <i>Distri</i> in light and <i>matcher</i> in semibold.</p>
+    <h3 style="margin-top:6mm">Colour palette “Ocean Serenity” + signal</h3>
+    <div class="swatches">
+      <div class="sw" style="background:#01161E;color:#EFF6E0"><b>Abyss</b>#01161E<br>Text, dark surfaces</div>
+      <div class="sw" style="background:#124559;color:#EFF6E0"><b>Deep Teal</b>#124559<br>Primary, covered</div>
+      <div class="sw" style="background:#598392;color:#ffffff"><b>Mist Blue</b>#598392<br>Secondary, lines</div>
+      <div class="sw" style="background:#AEC3B0;color:#01161E"><b>Sage</b>#AEC3B0<br>Context, accents</div>
+      <div class="sw" style="background:#EFF6E0;color:#01161E;border:1px solid #e1e8d2"><b>Foam</b>#EFF6E0<br>Backgrounds</div>
+      <div class="sw" style="background:#D0603F;color:#ffffff"><b>Signal Coral</b>#D0603F<br>Gaps only</div>
+    </div>
+    <div class="grid2" style="margin-top:4mm">
+      <div>
+        <h3>Usage</h3>
+        <div class="usage"><div style="background:#ffffff;border:1px solid var(--line)"></div><div style="background:#EFF6E0"></div><div style="background:#124559"></div><div style="background:#D0603F"></div></div>
+        <p class="small muted" style="margin-top:2mm">White and Foam carry the layout, Deep Teal leads, and Signal Coral is reserved for gaps and calls to action. Deep Teal and Coral stay distinguishable for colour-blind readers (checked); values are always labelled in charts.</p>
+      </div>
+      <div>
+        <h3>Typography</h3>
+        <p style="font-size:20pt;font-weight:300;color:var(--ink);margin-bottom:1mm">Montserrat Light</p>
+        <p style="font-size:12pt;font-weight:600;color:var(--ink);margin-bottom:2mm">Montserrat Semibold</p>
+        <p class="small muted">Headings light, emphasis semibold, eyebrows in spaced capitals. In a bank setting the house font (e.g. Verlag) can replace Montserrat 1:1.</p>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span class="brand"><svg><use href="#mark"/></svg>Distrimatcher</span><span>Brand · 13</span></div>
+</section>
+
+<!-- ============================================================ 14 BACK COVER -->
+<section class="page back">
+  <svg class="waves" style="height:95mm" viewBox="0 0 210 95" preserveAspectRatio="none">
+    <path d="M0 30 C40 18 70 42 110 32 S170 14 210 26 V95 H0Z" fill="#598392" opacity=".55"/>
+    <path d="M0 52 C45 42 80 64 120 56 S175 38 210 48 V95 H0Z" fill="#01161E" opacity=".75"/>
+    <path d="M0 74 C40 66 75 84 115 78 S172 64 210 72 V95 H0Z" fill="#01161E"/>
+  </svg>
+  <div class="pad" style="position:absolute;left:0;right:0;top:70mm">
+    <svg viewBox="0 0 520 112" style="width:110mm;height:auto"><use href="#mark-l" x="8" y="8" width="96" height="96"/>
+      <text x="124" y="66" font-family="Montserrat" font-size="46" fill="#EFF6E0" letter-spacing="-0.5"><tspan font-weight="300">Distri</tspan><tspan font-weight="600">matcher</tspan></text>
+      <text x="126" y="92" font-family="Montserrat" font-size="13" font-weight="400" fill="#AEC3B0" letter-spacing="3.2">AGREEMENT COVERAGE, MADE VISIBLE</text></svg>
+    <p style="color:var(--foam);font-size:13pt;margin-top:10mm;max-width:130mm">Every share class. Every agreement. No blind spots.</p>
+    <p class="small" style="color:var(--sage);margin-top:8mm">Contact: [team / owner] · [e-mail] · [internal page]<br>Version 0.3 · November 2026 · Sample data in this brochure is fictitious or from public SEC filings.</p>
+  </div>
+</section>
+</body>
+</html>
