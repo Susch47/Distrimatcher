@@ -1,0 +1,44 @@
+DISTRIMATCHER – Windows test package
+=====================================
+
+What it does
+  Distrimatcher reads your distribution agreements (PDF / ZIP, incl. scanned documents via OCR),
+  compares them with public fund data and shows which share classes (ISINs) are NOT covered by an
+  agreement – with a focus on share classes that pay retrocessions.
+  Everything runs locally on this computer. Agreement contents never leave the machine; only public
+  reference data (fund names, ISINs) is looked up online.
+
+Start
+  Double-click "Start Distrimatcher.cmd" (or App\Distrimatcher.exe).
+  Windows SmartScreen may warn because the program is not signed:
+  click "More info" -> "Run anyway".
+  A window opens (or your browser at http://127.0.0.1:8765). The app starts empty.
+
+User journey (use the files in the "Test data" folder)
+  1  Agreements       Drag "Test data\demo_agreements.zip" onto the upload area.
+                       9 agreements are read (one of them is a scan and is read with OCR).
+                       Click a row to see the extracted terms and the PDF. Click column headers to sort.
+  2  Overview         "Suggest from agreements" -> "Load selected"   (public SEC data, needs internet)
+                       "Import file" -> "Test data\Fund_list_with_retro.csv"
+                       The waterfall shows: Fund IDs -> ISINs -> found in agreements -> covered -> gaps.
+                       The (i) button opens the manual.
+  3  Watchlist        Review every gap: Confirm, Dismiss, Add to agreement, Open agreement.
+  4  Provider e-mail  Pick a provider -> pre-written e-mail (English / German) listing the uncovered ISINs.
+                       "Download .eml" opens it as a draft in Outlook.
+  5  Activity log     Everything that happened, with timestamps. "Reset all data" starts from scratch.
+
+Manual
+  The manual (button "Manual" or the (i) icon) is a text file you can edit – in the app via "Edit",
+  or directly: %LOCALAPPDATA%\Distrimatcher\manual.md
+
+Your data
+  %LOCALAPPDATA%\Distrimatcher  – database, uploaded PDFs, manual and log file.
+  Delete this folder to reset the app completely.
+
+Update to the latest version
+  Run "Update Distrimatcher.cmd" in this folder (downloads the newest test build from GitHub).
+
+Troubleshooting
+  - Nothing happens on start: see %LOCALAPPDATA%\Distrimatcher\distrimatcher.log
+  - No window, only a browser tab: the Microsoft Edge WebView2 runtime is missing – the browser version works the same.
+  - SEC / GLEIF buttons fail: no internet access or blocked by a proxy – use "Import file" instead.
