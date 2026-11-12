@@ -99,6 +99,7 @@ def test_scanned_german_agreement_via_ocr():
     assert px.ocr_pages >= 1
     assert ex.distributor == "Rheintal Privatbank AG"
     assert ex.termination_notice == "3 Monate"
+    assert set(ex.territory) == {"Liechtenstein", "Switzerland", "Austria"}
     universe = {r["isin"] for r in csv.DictReader(open(SAMPLES / "public_data" / "synthetic_fund_universe.csv", encoding="utf-8"))}
     found = {sc.isin for f in ex.funds for sc in f.share_classes}
     assert len(found) == 5 and found <= universe

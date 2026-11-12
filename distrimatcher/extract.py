@@ -390,7 +390,10 @@ def extract_notice(text: str) -> str | None:
 
 def extract_territory(text: str) -> list[str]:
     t = clean(text)
-    windows = [m.start() for m in re.finditer(r"territor|countries|jurisdictions|Vertriebsländer|Vertriebsgebiet|Länder", t, re.I)]
+    # Sätze zu Recht/Gerichtsstand/Sitz nennen Länder, die kein Vertriebsgebiet sind
+    t = " ".join(s_ for s_ in re.split(r"(?<=[.;])\s+", t)
+                 if not re.search(r"\b(?:law|laws|Recht|Gerichtsstand|courts?|jurisdiction|incorporated|registriert|Sitz|organized)\b", s_, re.I))
+    windows = [m.start() for m in re.finditer(r"territor|countries|jurisdictions|Vertriebsl[äa]nd|Vertriebsgebiet|L[äa]nder", t, re.I)]
     found: list[str] = []
     for c in COUNTRIES:
         for pos in windows:
