@@ -259,7 +259,7 @@ def _csv(rows: list[list], header: list[str], name: str) -> Response:
 
 
 @app.get("/api/export/overview.csv")
-def export_overview(only_delta: bool = False):
+def export_overview(only_delta: bool = False, only_retro: bool = False):
     ov = overview()
     rows = []
     for u in ov["umbrellas"]:
@@ -267,11 +267,15 @@ def export_overview(only_delta: bool = False):
             for c in f["classes"]:
                 if only_delta and c["status"] == "abgedeckt":
                     continue
+                if only_retro and not c["pays_retro"]:
+                    continue
                 rows.append([u["name"], f["fund_id"], f["fund_name"], c["class_id"], c["class_name"], c["isin"], c["ticker"],
-                             c["currency"], c["status"], c["via"], ", ".join(c["documents"]), ", ".join(f["sources"])])
-    header = ["Umbrella", "Fund-ID", "Fund", "Class-ID", "Share Class", "ISIN", "Ticker", "Währung", "Status", "Abgleich über",
-              "Agreements", "Datenquelle"]
-    return _csv(rows, header, "distrimatcher_delta.csv" if only_delta else "distrimatcher_uebersicht.csv")
+                             c["currency"], c["retro"], c["retro_basis"], c["status"], c["via"], ", ".join(c["documents"]),
+                             ", ".join(f["sources"])])
+    header = ["Umbrella", "Fund-ID", "Fund", "Class-ID", "Share Class", "ISIN", "Ticker", "Währung", "Retrozession",
+              "Retro-Quelle", "Status", "Abgleich über", "Agreements", "Datenquelle"]
+    name = "distrimatcher_" + ("delta" if only_delta else "uebersicht") + ("_retro" if only_retro else "") + ".csv"
+    return _csv(rows, header, name)
 
 
 @app.get("/api/export/extraction.csv")
@@ -284,10 +288,12 @@ def export_extraction():
                 ex.get("termination_notice"), ex.get("exclusivity")]
         for f in ex.get("funds", []) or [{"name": None, "share_classes": []}]:
             for sc in f.get("share_classes") or [{}]:
-                rows.append(base + [f.get("umbrella"), f.get("name"), "ja" if f.get("all_classes") else "", sc.get("name"),
-                                    sc.get("isin"), sc.get("fee")])
+                retro = {True: "ja", False: "nein"}.get(sc.get("retro"), "")
+                rows.append(base + [(ex.get("retrocession") or {}).get("rate"), f.get("umbrella"), f.get("name"),
+                                    "ja" if f.get("all_classes") else "", sc.get("name"), sc.get("isin"), sc.get("fee"), retro])
     header = ["Dokument", "Typ", "Datum", "Fondsgesellschaft", "Distributor", "Verwaltungsgesellschaft", "Recht", "Territorium",
-              "Kündigungsfrist", "Exklusivität", "Umbrella", "Fund", "Alle Klassen", "Share Class", "ISIN", "Gebühr"]
+              "Kündigungsfrist", "Exklusivität", "Retro-Satz (Vertrag)", "Umbrella", "Fund", "Alle Klassen", "Share Class", "ISIN",
+              "Gebühr", "Retrozession"]
     return _csv(rows, header, "distrimatcher_extraktion.csv")
 
 

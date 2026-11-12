@@ -1,0 +1,23 @@
+DISTRIMATCHER – Testpaket für Windows
+=====================================
+
+Start
+  Ordner "Distrimatcher" öffnen und Distrimatcher.exe doppelklicken.
+  (Beim ersten Start kann Windows SmartScreen warnen: "Weitere Informationen" -> "Trotzdem ausführen".
+   Das Programm ist nicht signiert.)
+  Es öffnet sich ein Fenster (oder der Browser) mit der Adresse http://127.0.0.1:8765.
+  Alles läuft lokal; die Vertragsdaten verlassen den PC nicht.
+
+Ausprobieren
+  1. Tab "1 · Agreements": Testdaten\demo_agreements.zip hineinziehen.
+     -> 9 Verträge werden gelesen (einer davon ist ein Scan und wird per OCR gelesen).
+  2. Tab "2 · Übersicht & Delta":
+     - "Vorschläge aus Verträgen" -> "Auswahl laden"   (öffentliche SEC-Daten, braucht Internet)
+     - "Datei importieren …" -> Testdaten\Fondsliste_mit_Retro.csv
+     -> Häkchen "nur Klassen mit Retrozession" zeigt die retro-zahlenden Klassen,
+        rot = in keinem Agreement abgedeckt. Export über "Retro-Delta als CSV".
+  3. Danach eigene Agreements (ZIP) hochladen.
+
+Daten / Zurücksetzen
+  Gespeichert wird unter %LOCALAPPDATA%\Distrimatcher (Datenbank, PDFs, Log).
+  Ordner löschen = alles zurücksetzen.

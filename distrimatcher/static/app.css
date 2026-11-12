@@ -114,3 +114,5 @@ pre.raw { white-space: pre-wrap; font: 12px ui-monospace, Consolas, monospace; b
 textarea.json { width: 100%; min-height: 280px; font: 12px ui-monospace, Consolas, monospace; }
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--surface); padding: 8px 14px; border-radius: 8px; font-size: 13px; z-index: 30; }
 .cls table.data { table-layout: fixed; } .cls table.data td, .cls table.data th { overflow-wrap: anywhere; }
+.b-retro { background: #efe7fb; color: #6b3fb3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .b-retro { background: #2c2142; color: #c4a6ff; } }

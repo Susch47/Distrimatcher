@@ -10,6 +10,13 @@ const api = async (url, opts = {}) => {
 const toast = (msg) => { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 3500); };
 const debounce = (fn, ms = 200) => { let h; return (...a) => { clearTimeout(h); h = setTimeout(() => fn(...a), ms); }; };
 
+const retroBadge = (v, basis) => {
+  if (v === true || v === "ja") return `<span class="badge b-retro" title="${esc(basis || "")}">Retro</span>`;
+  if (v === false || v === "nein") return `<span class="badge b-mute" title="${esc(basis || "")}">clean</span>`;
+  if (v) return `<span class="badge b-retro" title="${esc(basis || "")}">${esc(v)}</span>`;
+  return '<span class="muted small">?</span>';
+};
+
 /* ---------------- Tabs ---------------- */
 $$(".tab").forEach((b) => b.addEventListener("click", () => {
   $$(".tab").forEach((x) => x.classList.toggle("active", x === b));
@@ -84,7 +91,7 @@ async function loadCoverage() {
   const nIsin = coverage.reduce((a, f) => a + f.classes.filter((c) => c.isin).length, 0);
   $("#cov-kpis").innerHTML = [
     ["Dokumente", docs.filter((d) => d.status === "done").length], ["Funds", coverage.length],
-    ["Share Classes", nClasses], ["mit ISIN", nIsin], ["„alle Klassen“", coverage.filter((f) => f.all_classes).length],
+    ["Share Classes", nClasses], ["mit ISIN", nIsin], ["mit Retro", coverage.reduce((a, f) => a + f.classes.filter((c) => c.retro === true).length, 0)],
   ].map(([l, v]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
   renderCoverage();
 }
@@ -99,8 +106,8 @@ function renderCoverage() {
       <details><summary><span class="fname">${esc(f.fund_name)}</span>
         ${f.all_classes ? '<span class="badge b-ok">alle Klassen</span>' : `<span class="badge b-mute">${f.classes.length} Klassen</span>`}
         <span class="docs">${esc(f.documents.join(", "))}</span></summary>
-        <div class="cls">${f.classes.length ? `<table class="data"><thead><tr><th>Share Class</th><th>ISIN</th><th>Gebühr</th><th>Quelle</th></tr></thead><tbody>
-          ${f.classes.map((c) => `<tr><td>${esc(c.name || "–")}</td><td class="mono">${esc(c.isin || "")}</td><td>${esc(c.fee || "")}</td><td class="docs">${esc(c.documents.join(", "))}</td></tr>`).join("")}
+        <div class="cls">${f.classes.length ? `<table class="data"><thead><tr><th>Share Class</th><th>ISIN</th><th>Gebühr</th><th>Retro</th><th>Quelle</th></tr></thead><tbody>
+          ${f.classes.map((c) => `<tr><td>${esc(c.name || "–")}</td><td class="mono">${esc(c.isin || "")}</td><td>${esc(c.fee || "")}</td><td>${retroBadge(c.retro, "laut Vertrag")}</td><td class="docs">${esc(c.documents.join(", "))}</td></tr>`).join("")}
         </tbody></table>` : '<p class="muted small">Keine einzelnen Klassen genannt.</p>'}</div>
       </details>`).join("")}
     </div></details>`).join("") || '<p class="empty">Noch keine Funds erkannt.</p>';
@@ -129,7 +136,14 @@ async function openDoc(id) {
     ${(ex.parties || []).length ? `<table class="data"><thead><tr><th>Name</th><th>Definiert als</th><th>Rolle</th></tr></thead><tbody>${ex.parties.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.alias || "")}</td><td>${esc(p.role)}</td></tr>`).join("")}</tbody></table>` : '<p class="muted small">Keine erkannt.</p>'}
     <div class="section-title">Funds &amp; Share Classes (${(ex.funds || []).length})</div>
     ${(ex.funds || []).map((f) => `<details open><summary><span class="fname">${esc(f.name)}</span> ${f.umbrella ? `<span class="badge b-mute">${esc(f.umbrella)}</span>` : ""} ${f.all_classes ? '<span class="badge b-ok">alle Klassen</span>' : ""} <span class="docs">Quelle: ${esc(f.source)}</span></summary>
-      <div class="cls">${f.share_classes.length ? `<table class="data"><tbody>${f.share_classes.map((c) => `<tr><td>${esc(c.name || "–")}</td><td class="mono">${esc(c.isin || "")}</td><td>${esc(c.currency || "")}</td><td>${esc(c.fee || "")}</td></tr>`).join("")}</tbody></table>` : ""}</div></details>`).join("")}
+      <div class="cls">${f.share_classes.length ? `<table class="data"><tbody>${f.share_classes.map((c) => `<tr><td>${esc(c.name || "–")}</td><td class="mono">${esc(c.isin || "")}</td><td>${esc(c.currency || "")}</td><td>${esc(c.fee || "")}</td><td>${retroBadge(c.retro, "laut Vertrag")}</td></tr>`).join("")}</tbody></table>` : ""}</div></details>`).join("")}
+    <div class="section-title">Retrozession / Trail</div>
+    ${(() => { const r = ex.retrocession || {}; return `<dl class="fields">
+      <dt>Vereinbart</dt><dd>${r.agreed === true ? "ja" : r.agreed === false ? "nein" : '<span class="muted">nicht erkannt</span>'}</dd>
+      <dt>Satz</dt><dd>${esc(r.rate || "–")}</dd>
+      <dt>Gilt für Klassen</dt><dd>${esc((r.included_classes || []).join(", ") || "alle (sofern nicht ausgenommen)")}</dd>
+      <dt>Ausgenommen</dt><dd>${esc((r.excluded_classes || []).join(", ") || "–")}</dd></dl>
+      ${(r.terms || []).length ? `<ul class="small">${r.terms.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}`; })()}
     <div class="section-title">Gebühren / Provisionen</div>
     ${(ex.fees || []).length ? `<ul class="small">${ex.fees.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : '<p class="muted small">Keine erkannt.</p>'}
     <details><summary class="section-title">Extraktion bearbeiten (JSON)</summary>
@@ -219,6 +233,7 @@ async function loadOverview() {
   $("#ov-kpis").innerHTML = [
     ["Funds im Universum", t.funds, ""], ["Share Classes", t.classes, ""], ["abgedeckt", t.covered, "ok"],
     ["Delta (nicht abgedeckt)", t.delta, "bad"], ["prüfen", t.check, "warn"], ["Funds ohne Agreement", t.funds_without_agreement, "bad"],
+    ["Klassen mit Retro", t.retro_classes, ""], ["Retro-Delta", t.retro_delta, "bad"], ["Retro unbekannt", t.retro_unknown, "warn"],
   ].map(([l, v, c]) => `<div class="kpi ${c}"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
   renderOverview();
 }
@@ -227,15 +242,17 @@ $$("#ov-status button").forEach((b) => b.addEventListener("click", () => {
 }));
 $("#ov-filter").addEventListener("input", debounce(renderOverview));
 $("#ov-nodoc").addEventListener("change", renderOverview);
+$("#ov-retro").addEventListener("change", renderOverview);
 
 const clsBadge = (c) => ({ "abgedeckt": "b-ok", "nicht abgedeckt": "b-bad", "prüfen": "b-warn" }[c] || "b-mute");
 function renderOverview() {
   if (!ov) return;
   const q = $("#ov-filter").value.toLowerCase();
   const nodoc = $("#ov-nodoc").checked;
+  const onlyRetro = $("#ov-retro").checked;
   let html = "";
   for (const u of ov.umbrellas) {
-    const funds = u.funds.map((f) => ({ ...f, shown: f.classes.filter((c) => (!ovStatus || c.status === ovStatus)
+    const funds = u.funds.map((f) => ({ ...f, shown: f.classes.filter((c) => (!ovStatus || c.status === ovStatus) && (!onlyRetro || c.pays_retro !== false)
       && (!q || [f.fund_name, f.fund_id, c.class_name, c.isin, c.class_id, c.ticker].join(" ").toLowerCase().includes(q))) }))
       .filter((f) => f.shown.length && (!nodoc || !f.matched_agreements.length));
     if (!funds.length) continue;
@@ -248,8 +265,9 @@ function renderOverview() {
           <span class="small">${f.covered}/${f.total}</span>
           ${f.delta ? `<span class="badge b-bad">Δ ${f.delta}</span>` : ""}${f.check ? `<span class="badge b-warn">? ${f.check}</span>` : ""}
           ${f.matched_agreements.length ? `<span class="docs" title="Abgleich: ${esc(f.match_how.join(", "))} (${f.match})">${esc(f.matched_agreements.join(", "))}</span>` : '<span class="badge b-bad">kein Agreement</span>'}
-        </summary><div class="cls"><table class="data"><thead><tr><th>Class-ID</th><th>Share Class</th><th>ISIN</th><th>Ticker</th><th>Whg.</th><th>Status</th><th>Abgleich</th><th>Agreement</th></tr></thead><tbody>
+        </summary><div class="cls"><table class="data"><thead><tr><th>Class-ID</th><th>Share Class</th><th>ISIN</th><th>Ticker</th><th>Whg.</th><th>Retro</th><th>Status</th><th>Abgleich</th><th>Agreement</th></tr></thead><tbody>
         ${f.shown.map((c) => `<tr><td class="mono">${esc(c.class_id || "")}</td><td>${esc(c.class_name || "–")}</td><td class="mono">${esc(c.isin || "")}</td><td class="mono">${esc(c.ticker || "")}</td><td>${esc(c.currency || "")}</td>
+          <td>${retroBadge(c.retro, c.retro_basis)}${c.retro_basis ? ` <span class="docs">${esc(c.retro_basis)}</span>` : ""}</td>
           <td><span class="badge ${clsBadge(c.status)}">${esc(c.status)}</span></td><td class="small">${esc(c.via || "")}</td><td class="docs">${esc(c.documents.join(", "))}</td></tr>`).join("")}
         </tbody></table></div></details>`;
     }

@@ -119,3 +119,43 @@ def test_delta_against_universe():
     assert t["classes"] == 18 and t["covered"] == 10 and t["delta"] == 8
     emd = next(f for u in ov["umbrellas"] for f in u["funds"] if "Emerging Markets Debt" in f["fund_name"])
     assert emd["covered"] == 0 and not emd["matched_agreements"]
+
+
+# ------------------------------------------------------------------ Retrozessionen
+def test_retrocession_terms_from_agreements():
+    _, ex = run(EU / "Alpenblick_Global_Distribution_Agreement_2024.pdf")
+    assert ex.retrocession["agreed"] is True
+    assert ex.retrocession["rate"].startswith("40%")
+    assert ex.retrocession["excluded_classes"] == ["I"]
+    retro = {sc.name: sc.retro for f in ex.funds for sc in f.share_classes}
+    assert retro["A EUR acc"] is True and retro["I EUR acc"] is False
+
+    _, ex = run(EU / "Alpenblick_Nachtrag_1_2025.pdf")  # "Für I-Klassen fällt keine Bestandsprovision an"
+    assert "I" in ex.retrocession["excluded_classes"] and "A" in ex.retrocession["included_classes"]
+
+    _, ex = run(SEC / "SEC_carillon_2025.pdf")  # 12b-1-Sätze je Klasse
+    f = next(f for f in ex.funds if f.name == "Carillon Eagle Growth & Income Fund")
+    assert {sc.name: sc.retro for sc in f.share_classes} == {"Class A": True, "Class C": True, "Class I": False, "Class R-6": False}
+
+
+def test_retro_import_parsing_and_guess():
+    from distrimatcher.universe import guess_retro, parse_retro
+
+    assert parse_retro("Ja") == "ja" and parse_retro("0,00%") == "nein" and parse_retro("0.40%") == "0.40%"
+    assert guess_retro("I EUR acc") == "nein" and guess_retro("A EUR acc") == "ja" and guess_retro("Clean CHF") == "nein"
+    assert guess_retro("Class W") is None
+
+
+def test_retro_delta():
+    docs = []
+    for i, p in enumerate(sorted(EU.glob("Alpenblick*.pdf"))):
+        px, ex = run(p)
+        docs.append({"id": i, "filename": p.name, "text": px.text, "extraction": ex.to_dict()})
+    from distrimatcher.universe import import_table
+
+    recs, _ = import_table("u.csv", (SAMPLES / "public_data" / "synthetic_fund_universe.csv").read_bytes())
+    universe = [r.to_dict() for r in recs if r.umbrella == "Alpenblick Invest SICAV"]
+    t = build_overview(universe, docs)["totals"]
+    # A- und R-Klassen zahlen Retro (aus der Fondsliste), I-Klassen sind clean
+    assert t["retro_classes"] == 10 and t["retro_unknown"] == 0
+    assert t["retro_delta"] == 5

@@ -82,6 +82,7 @@ class ShareClassEntry:
     isin: str | None = None
     currency: str | None = None
     fee: str | None = None
+    retro: bool | None = None  # zahlt laut Vertrag Retrozession/Trail?
 
 
 @dataclass
@@ -122,6 +123,7 @@ class Extraction:
     termination_notice: str | None = None
     term: str | None = None
     fees: list[str] = field(default_factory=list)
+    retrocession: dict = field(default_factory=dict)
     signatories: list[str] = field(default_factory=list)
     isins: list[str] = field(default_factory=list)
     leis: list[str] = field(default_factory=list)
@@ -283,6 +285,92 @@ def extract_fees(text: str) -> list[str]:
     return fees[:40]
 
 
+RETRO_KW = (
+    r"retro(?:cession|zession)s?|trail(?:\s+(?:fee|commission))?|bestande?s?(?:pflege)?(?:kommission|provision)|"
+    r"vertriebs(?:entsch(?:ä|ae)digung|provision|verg(?:ü|ue)tung)|kickback|rebate|distribution\s+(?:and\s+service\s+)?fee|"
+    r"12b-1|service\s+fee|commission\s+de\s+distribution"
+)
+RETRO_RE = re.compile(RETRO_KW, re.I)
+RETRO_NEG_RE = re.compile(
+    rf"(?:no|keine?|not\s+entitled\s+to\s+any|ohne)\s+(?:{RETRO_KW})[^.]{{0,80}}?"
+    r"(?:on|for|für|auf|in)\s+((?:Class(?:es)?\s+[A-Z0-9-]+(?:\s*(?:,|and|und)\s*[A-Z0-9-]+)*)|[A-Z]{1,2}-?(?:Klassen|classes|shares|Anteile[n]?))",
+    re.I,
+)
+
+
+CLASS_REF_RE = re.compile(r"\bClass(?:es)?\s+([A-Z][A-Z0-9]?(?:-\d)?)\b|\b([A-Z]{1,2})-(?:Klassen|Klasse|classes|Anteile[n]?|shares)\b")
+RETRO_NEG_REV_RE = re.compile(
+    rf"(?:für|for|on|auf)\s+((?:Class(?:es)?\s+[A-Z0-9-]+)|[A-Z]{{1,2}}-?(?:Klassen|classes|shares|Anteile[n]?))[^.]{{0,40}}?(?:keine?|no)\s+(?:{RETRO_KW})",
+    re.I,
+)
+
+
+def _class_refs(s: str) -> list[str]:
+    return [(m.group(1) or m.group(2)).upper() for m in CLASS_REF_RE.finditer(s)]
+
+
+def extract_retrocession(text: str) -> dict:
+    """Retrozessions-/Trail-Regelung des Vertrags (Satz, Satzhöhe, ausgenommene Klassen)."""
+    t = clean(text)
+    sentences = re.split(r"(?<=[.;])\s+(?=[A-ZÄÖÜ§0-9])", t)
+    terms = [s_[:400] for s_ in sentences if RETRO_RE.search(s_) and re.search(r"\d+(?:[.,]\d+)?\s?%|basis points|bps|Basispunkte|management fee|Verwaltungs", s_, re.I)]
+    rate = None
+    for s_ in terms:
+        m = re.search(r"(\d+(?:[.,]\d+)?\s?%(?:\s*(?:p\.?\s?a\.?|per annum))?(?:\s+(?:of|der|des)\s+(?:the\s+)?(?:management\s+fee|Verwaltungs\w+|mgmt\.?\s+fee|average\s+daily\s+net\s+assets))?)", s_, re.I)
+        if m and not re.fullmatch(r"0+(?:[.,]0+)?\s?%", m.group(1).split()[0] + "%" if "%" not in m.group(1).split()[0] else m.group(1).split()[0]):
+            rate = clean(m.group(1))
+            break
+    excluded: list[str] = []
+    for m in list(RETRO_NEG_RE.finditer(t)) + list(RETRO_NEG_REV_RE.finditer(t)):
+        grp = m.group(1)
+        lm = re.match(r"([A-Z]{1,2})-?(?:Klassen|classes|shares|Anteile)", grp, re.I)
+        if lm:
+            excluded.append(lm.group(1).upper())
+        else:
+            excluded += [c.strip().upper() for c in re.split(r",|and|und", re.sub(r"Class(?:es)?\s+", "", grp)) if c.strip()]
+    included = sorted({c for s_ in terms for c in _class_refs(s_)} - set(excluded))
+    no_retro_at_all = bool(re.search(r"(?:no|keine?)\s+(?:retrocessions?|Retrozessionen?|trail commissions?)\s+(?:shall\s+be|will\s+be|werden|wird|is|are)\s+(?:paid|gezahlt|bezahlt|payable|geschuldet)", t, re.I)) and not rate
+    agreed = True if rate else (False if no_retro_at_all else None)
+    return {"agreed": agreed, "rate": rate, "included_classes": included, "excluded_classes": sorted(set(excluded)), "terms": terms[:10]}
+
+
+def _fee_is_zero(fee: str | None) -> bool | None:
+    if not fee:
+        return None
+    f = fee.strip().lower()
+    if re.fullmatch(r"(?:none|keine?|nil|n/?a|-|–|0+(?:[.,]0+)?\s?%?)", f):
+        return True
+    if re.search(r"[1-9]", f) and ("%" in f or "bp" in f or "fee" in f):
+        return False
+    return None
+
+
+def assign_class_retro(ex: "Extraction") -> None:
+    r = ex.retrocession or {}
+    excluded = set(r.get("excluded_classes") or [])
+    included = set(r.get("included_classes") or [])
+
+    def hit(base: str, group: set) -> bool:
+        return bool(base) and (base in group or (len(base) <= 3 and base[:1] in group))
+
+    for f in ex.funds:
+        for sc in f.share_classes:
+            zero = _fee_is_zero(sc.fee)
+            base = (norm_class(sc.name or "").split() or [""])[0].upper()
+            if zero is True:
+                sc.retro = False
+            elif zero is False:
+                sc.retro = True
+            elif hit(base, excluded):
+                sc.retro = False
+            elif included:
+                sc.retro = True if hit(base, included) else None
+            elif r.get("agreed") is True:
+                sc.retro = True
+            elif r.get("agreed") is False:
+                sc.retro = False
+
+
 def extract_notice(text: str) -> str | None:
     t = clean(text)
     m = re.search(
@@ -369,6 +457,7 @@ def extract_header_fields(text: str, ex: Extraction) -> None:
         if key in ("fund_entity", "distributor", "management_company", "investment_adviser") and not getattr(ex, key):
             setattr(ex, key, p["name"])
     ex.fees = extract_fees(text)
+    ex.retrocession = extract_retrocession(text)
     ex.territory = extract_territory(text)
     ex.signatories = extract_signatories(text)
     ex.isins = find_isins(text)
@@ -623,6 +712,7 @@ def extract_document(text: str, pdf_bytes: bytes | None = None, ocr_pages: set[i
         named_with_isin = {norm_class(sc.name) for sc in f.share_classes if sc.isin and sc.name}
         f.share_classes = [sc for sc in f.share_classes if sc.isin or not sc.name or norm_class(sc.name) not in named_with_isin]
     ex.funds = list(funds.values())
+    assign_class_retro(ex)
     if not ex.fund_entity:
         m = re.search(r"^\s*([A-Z][A-Z0-9 .&,'-]{3,60}?\s(?:TRUST|FUNDS?(?:\s+[IVX]+)?|SICAV|ICAV|PLC))\s*\d?\s*$", text, re.M)
         umbrellas = sorted({f.umbrella for f in ex.funds if f.umbrella})

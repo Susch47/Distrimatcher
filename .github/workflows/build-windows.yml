@@ -1,0 +1,65 @@
+name: Windows-Build
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Tesseract-OCR (inkl. Deutsch) zum Mitliefern holen
+        shell: pwsh
+        run: |
+          choco install tesseract --no-progress -y
+          $src = "C:\Program Files\Tesseract-OCR"
+          Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/deu.traineddata" -OutFile "$src\tessdata\deu.traineddata"
+          Copy-Item -Recurse $src packaging\tesseract
+          "TESSERACT_CMD=$src\tesseract.exe" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Tests
+        run: python -m pytest -q
+
+      - name: Programm bauen (PyInstaller)
+        run: pyinstaller --noconfirm packaging/distrimatcher.spec
+
+      - name: Testpaket zusammenstellen
+        shell: pwsh
+        run: |
+          $out = "Distrimatcher-Testpaket"
+          New-Item -ItemType Directory $out | Out-Null
+          Copy-Item -Recurse dist\Distrimatcher "$out\Distrimatcher"
+          New-Item -ItemType Directory "$out\Testdaten" | Out-Null
+          Copy-Item samples\demo_agreements.zip "$out\Testdaten\"
+          Copy-Item samples\public_data\synthetic_fund_universe.csv "$out\Testdaten\Fondsliste_mit_Retro.csv"
+          Copy-Item packaging\LIESMICH.txt "$out\"
+
+      - name: Smoke-Test der gebauten .exe
+        shell: pwsh
+        run: |
+          $env:DISTRIMATCHER_DATA = "$env:RUNNER_TEMP\dm-data"
+          $p = Start-Process -FilePath "Distrimatcher-Testpaket\Distrimatcher\Distrimatcher.exe" -ArgumentList "--no-browser","--port","8799" -PassThru
+          Start-Sleep -Seconds 15
+          $s = Invoke-RestMethod http://127.0.0.1:8799/api/status
+          $s | ConvertTo-Json
+          if (-not $s.ocr) { throw "OCR in der .exe nicht verfügbar" }
+          Stop-Process -Id $p.Id
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Distrimatcher-Testpaket-Windows
+          path: Distrimatcher-Testpaket
+          retention-days: 30

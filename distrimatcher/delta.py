@@ -6,6 +6,7 @@ from collections import defaultdict
 from difflib import SequenceMatcher
 
 from .extract import clean, norm_class, norm_fund
+from .universe import guess_retro
 
 COVERED = "abgedeckt"
 NOT_COVERED = "nicht abgedeckt"
@@ -71,6 +72,16 @@ def class_matches(universe_class: str | None, covered_class: str | None) -> bool
 
 
 CCYS = {"EUR", "USD", "CHF", "GBP", "JPY", "SEK", "NOK", "DKK", "AUD", "CAD", "SGD", "HKD"}
+
+
+def retro_status(universe_class: dict, contract_retro: list[bool]) -> tuple[str | None, str | None]:
+    """Retro-Status einer Klasse: Datenquelle > Vertrag > Vermutung (Klassenname)."""
+    if universe_class.get("retro"):
+        return universe_class["retro"], "Daten"
+    if contract_retro:
+        return ("ja" if any(contract_retro) else "nein"), "Vertrag"
+    g = guess_retro(universe_class.get("class_name"))
+    return (g, "Vermutung") if g else (None, None)
 
 
 def coverage_from_documents(docs: list[dict]) -> list[dict]:
@@ -140,26 +151,33 @@ def build_overview(universe: list[dict], docs: list[dict]) -> dict:
 
         classes_out = []
         for cl in f["classes"] or [{"class_name": None, "isin": None}]:
-            status, via, docs_hit = NOT_COVERED, None, []
+            status, via, docs_hit, contract_retro = NOT_COVERED, None, [], []
             for m in matches.values():
                 c = m["cov"]
-                hit = None
-                if cl.get("isin") and any(sc.get("isin") == cl["isin"] for sc in c["share_classes"]):
+                hit, sc_hit = None, None
+                sc_hit = next((sc for sc in c["share_classes"] if cl.get("isin") and sc.get("isin") == cl["isin"]), None)
+                if sc_hit:
                     hit = "ISIN"
                 elif c["all_classes"]:
                     hit = "alle Klassen"
-                elif any(class_matches(cl.get("class_name"), sc.get("name")) and not (sc.get("isin") and cl.get("isin") and sc["isin"] != cl["isin"]) for sc in c["share_classes"]):
-                    hit = "Klassenname"
+                else:
+                    sc_hit = next((sc for sc in c["share_classes"] if class_matches(cl.get("class_name"), sc.get("name"))
+                                   and not (sc.get("isin") and cl.get("isin") and sc["isin"] != cl["isin"])), None)
+                    hit = "Klassenname" if sc_hit else None
                 if hit:
                     status, via = COVERED, hit
                     docs_hit.append(c["doc_name"])
+                    if sc_hit and sc_hit.get("retro") is not None:
+                        contract_retro.append(sc_hit["retro"])
             if status != COVERED and (any(not m["cov"]["share_classes"] and not m["cov"]["all_classes"] for m in matches.values()) or fulltext_docs):
                 status, via = CHECK, "Fund genannt, Klassen nicht spezifiziert" if matches else "Fund nur im Volltext gefunden"
                 docs_hit = [m["cov"]["doc_name"] for m in matches.values()] or [d["filename"] for d in fulltext_docs]
+            retro, basis = retro_status(cl, contract_retro)
             classes_out.append({
                 "class_name": cl.get("class_name"), "class_id": cl.get("class_id"), "isin": cl.get("isin"),
                 "ticker": cl.get("ticker"), "currency": cl.get("currency"), "source": cl.get("source"),
                 "status": status, "via": via, "documents": sorted(set(docs_hit)),
+                "retro": retro, "retro_basis": basis, "pays_retro": None if retro is None else retro != "nein",
             })
         n_cov = sum(1 for c in classes_out if c["status"] == COVERED)
         result_funds.append({
@@ -188,6 +206,9 @@ def build_overview(universe: list[dict], docs: list[dict]) -> dict:
         "check": sum(f["check"] for f in result_funds),
         "funds_without_agreement": sum(1 for f in result_funds if not f["matched_agreements"]),
         "agreement_funds_not_in_universe": len(unmatched),
+        "retro_classes": sum(1 for f in result_funds for c in f["classes"] if c["pays_retro"]),
+        "retro_delta": sum(1 for f in result_funds for c in f["classes"] if c["pays_retro"] and c["status"] == NOT_COVERED),
+        "retro_unknown": sum(1 for f in result_funds for c in f["classes"] if c["pays_retro"] is None),
     }
     umbrellas: dict[str, list] = defaultdict(list)
     for f in result_funds:
@@ -210,7 +231,8 @@ def coverage_only_overview(docs: list[dict]) -> list[dict]:
         f["documents"].add(c["doc_name"])
         for sc in c["share_classes"]:
             ck = sc.get("isin") or norm_class(sc.get("name") or "")
-            e = f["classes"].setdefault(ck, {"name": sc.get("name"), "isin": sc.get("isin"), "fee": sc.get("fee"), "documents": set()})
+            e = f["classes"].setdefault(ck, {"name": sc.get("name"), "isin": sc.get("isin"), "fee": sc.get("fee"),
+                                             "retro": sc.get("retro"), "documents": set()})
             e["documents"].add(c["doc_name"])
     out = []
     for f in sorted(agg.values(), key=lambda x: ((x["umbrella"] or ""), x["fund_name"])):

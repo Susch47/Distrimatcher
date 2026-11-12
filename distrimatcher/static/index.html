@@ -96,7 +96,7 @@
       </div>
       <div class="card">
         <h3>Eigene Liste (CSV / Excel)</h3>
-        <p class="hint">Spalten z. B. <code>Umbrella</code>, <code>Fund ID</code>, <code>Fund Name</code>, <code>Share Class</code>, <code>ISIN</code>, <code>Currency</code>.</p>
+        <p class="hint">Spalten z. B. <code>Umbrella</code>, <code>Fund ID</code>, <code>Fund Name</code>, <code>Share Class</code>, <code>ISIN</code>, <code>Currency</code>, <code>Retrocession</code> (ja/nein oder Satz). Passt z. B. für Exporte aus SIX Fund Data, fundinfo oder der Fondsliste der ManCo.</p>
         <label class="btn"><input type="file" id="imp-file" accept=".csv,.xlsx,.xlsm,.txt" hidden>Datei importieren …</label>
         <div id="imp-msg" class="small"></div>
       </div>
@@ -117,9 +117,11 @@
           <button data-s="prüfen">Prüfen</button>
           <button data-s="abgedeckt">Abgedeckt</button>
         </div>
+        <label class="chk" title="Datenquelle, Vertrag oder Vermutung aus dem Klassennamen"><input type="checkbox" id="ov-retro" checked> nur Klassen mit Retrozession</label>
         <label class="chk"><input type="checkbox" id="ov-nodoc"> nur Funds ohne Agreement</label>
         <span class="spacer"></span>
-        <a class="btn" href="/api/export/overview.csv?only_delta=true">Delta als CSV</a>
+        <a class="btn" href="/api/export/overview.csv?only_delta=true&only_retro=true">Retro-Delta als CSV</a>
+        <a class="btn ghost" href="/api/export/overview.csv?only_delta=true">Delta als CSV</a>
         <a class="btn ghost" href="/api/export/overview.csv">Übersicht als CSV</a>
       </div>
       <div id="ov-tree" class="tree"></div>

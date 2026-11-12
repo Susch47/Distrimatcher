@@ -43,6 +43,7 @@ class UniverseRecord:
     ticker: str | None = None
     lei: str | None = None
     currency: str | None = None
+    retro: str | None = None  # "ja" / "nein" / Satz (z. B. "0.40%") – aus Datenquelle
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -244,7 +245,52 @@ COLUMN_ALIASES = {
     "isin": ["isin", "isin code"],
     "ticker": ["ticker", "class ticker", "bloomberg ticker"],
     "currency": ["currency", "ccy", "währung", "waehrung", "class currency"],
+    "retro": ["retro", "retrocession", "retrocessions", "retrozession", "retrozessionen", "retro (ja/nein)", "trail",
+              "trail fee", "trail commission", "bestandespflegekommission", "bestandespflege", "bestandsprovision",
+              "vertriebsentschädigung", "distribution fee", "kickback"],
 }
+
+
+def parse_retro(value: str | None) -> str | None:
+    """Normalisiert Retro-Angaben aus Importen: ja / nein / Satz."""
+    if value is None:
+        return None
+    v = str(value).strip().lower()
+    if not v:
+        return None
+    if v in {"ja", "yes", "y", "j", "true", "wahr", "1", "x", "✓"}:
+        return "ja"
+    if v in {"nein", "no", "n", "false", "falsch", "0", "-", "none", "keine", "clean", "0%", "0.00%", "0,00%"}:
+        return "nein"
+    m = re.search(r"(\d+(?:[.,]\d+)?)\s*(%|bp|bps)?", v)
+    if m:
+        num = float(m.group(1).replace(",", "."))
+        if num == 0:
+            return "nein"
+        unit = m.group(2) or "%"
+        return f"{m.group(1)}{'%' if unit == '%' else ' bp'}"
+    return str(value).strip()
+
+
+# Heuristik nach Klassenbezeichnung (nur als Vermutung, klar gekennzeichnet)
+NO_RETRO_HINTS = re.compile(r"\b(?:clean|no\s*retro|nr|institutional|inst|ohne\s+retro)\b", re.I)
+NO_RETRO_LETTERS = {"I", "IA", "IB", "Z", "Q", "N", "X", "S", "J", "UB", "EB", "M", "F", "K", "R6", "Y"}
+RETRO_LETTERS = {"A", "B", "C", "P", "R", "RA", "RB", "INV", "INVESTOR", "RETAIL", "T", "AA", "AD"}
+
+
+def guess_retro(class_name: str | None) -> str | None:
+    if not class_name:
+        return None
+    if NO_RETRO_HINTS.search(class_name):
+        return "nein"
+    s = re.sub(r"^.*\(((?:Share\s+)?Class[^)]*)\)\s*$", r"\1", class_name.strip())
+    s = re.sub(r"\b(?:Share|Shares|Class|Klasse|Anteilsklasse)\b", " ", s, flags=re.I)
+    tok = (s.replace("-", "").split() or [""])[0].upper()
+    if tok in NO_RETRO_LETTERS:
+        return "nein"
+    if tok in RETRO_LETTERS:
+        return "ja"
+    return None
 
 
 def _map_columns(header: list[str]) -> dict[str, int]:
@@ -292,5 +338,5 @@ def import_table(filename: str, data: bytes, source: str = "Import") -> tuple[li
         cname = g(r, "class_name")
         out.append(UniverseRecord(source, g(r, "umbrella"), g(r, "fund_id"), fund, g(r, "class_id"), cname, isin,
                                   g(r, "ticker"), g(r, "fund_id") if re.fullmatch(r"[A-Z0-9]{20}", g(r, "fund_id") or "") else None,
-                                  g(r, "currency") or class_currency(cname)))
+                                  g(r, "currency") or class_currency(cname), parse_retro(g(r, "retro"))))
     return out, warnings[:50]

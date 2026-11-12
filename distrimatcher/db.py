@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS universe (
     ticker TEXT,
     lei TEXT,
     currency TEXT,
+    retro TEXT,
     loaded_at TEXT DEFAULT (datetime('now'))
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_universe ON universe(source, IFNULL(fund_id,''), fund_name, IFNULL(class_id,''), IFNULL(class_name,''), IFNULL(isin,''));
@@ -66,6 +67,10 @@ class DB:
         with _lock:
             self.conn.executescript(SCHEMA)
             self.conn.execute("PRAGMA journal_mode=WAL")
+            cols = {r[1] for r in self.conn.execute("PRAGMA table_info(universe)")}
+            if "retro" not in cols:  # Migration älterer Datenbanken
+                self.conn.execute("ALTER TABLE universe ADD COLUMN retro TEXT")
+                self.conn.commit()
 
     # -------------------------------------------------------------- Dokumente
     def add_document(self, filename: str, sha256: str) -> tuple[int, bool]:
@@ -112,7 +117,7 @@ class DB:
 
     # -------------------------------------------------------------- Universum
     def add_universe(self, records: list[dict]) -> int:
-        cols = ["source", "umbrella", "fund_id", "fund_name", "class_id", "class_name", "isin", "ticker", "lei", "currency"]
+        cols = ["source", "umbrella", "fund_id", "fund_name", "class_id", "class_name", "isin", "ticker", "lei", "currency", "retro"]
         with _lock:
             before = self.conn.total_changes
             self.conn.executemany(

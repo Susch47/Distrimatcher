@@ -1,31 +1,31 @@
-umbrella,fund_id,fund_name,share_class,isin,currency,management_company
-Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,A EUR acc,LU9839136744,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,A EUR dis,LU9982702813,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,I EUR acc,LU9148987654,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,I CHF hedged acc,LU9094987500,CHF,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,R USD acc,LU9933562274,USD,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,A EUR acc,LU9321295867,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,A EUR dis,LU9147016158,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,I EUR acc,LU9040228736,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,I CHF hedged acc,LU9787990126,CHF,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,A CHF acc,LU9285093068,CHF,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,I CHF acc,LU9101408433,CHF,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,A EUR hedged acc,LU9982894990,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,A EUR acc,LU9197580160,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,I EUR acc,LU9654979210,EUR,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,I USD hedged acc,LU9817706989,USD,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,A USD acc,LU9147813554,USD,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,I USD acc,LU9270917743,USD,Alpenblick Asset Management S.A.
-Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,A EUR hedged dis,LU9808340483,EUR,Alpenblick Asset Management S.A.
-Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class A EUR,IE9729609219,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class B EUR,IE9860677512,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class I EUR,IE9861166812,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class I SEK,IE9927779160,SEK,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class R CHF,IE9885635610,CHF,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class A EUR,IE9275147150,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class I EUR,IE9069193832,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class I USD,IE9844891809,USD,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class Z EUR,IE9427369702,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class A EUR,IE9969385157,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class I EUR,IE9129132127,EUR,Nordlicht Capital Management Limited
-Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class I CHF,IE9822112962,CHF,Nordlicht Capital Management Limited
+umbrella,fund_id,fund_name,share_class,isin,currency,management_company,retrocession
+Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,A EUR acc,LU9839136744,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,A EUR dis,LU9982702813,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,I EUR acc,LU9148987654,EUR,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,I CHF hedged acc,LU9094987500,CHF,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299XR46XPKTD56ZKS48,Alpenblick Invest SICAV - Global Equity Fund,R USD acc,LU9933562274,USD,Alpenblick Asset Management S.A.,0.50%
+Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,A EUR acc,LU9321295867,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,A EUR dis,LU9147016158,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,I EUR acc,LU9040228736,EUR,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299MP65UP3N3SHGDJ54,Alpenblick Invest SICAV - Euro Corporate Bond Fund,I CHF hedged acc,LU9787990126,CHF,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,A CHF acc,LU9285093068,CHF,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,I CHF acc,LU9101408433,CHF,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299DWKVVL39X01UWV53,Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund,A EUR hedged acc,LU9982894990,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,A EUR acc,LU9197580160,EUR,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,I EUR acc,LU9654979210,EUR,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299GJ6K7AUMYUFZZG40,Alpenblick Invest SICAV - Sustainable Infrastructure Fund,I USD hedged acc,LU9817706989,USD,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,A USD acc,LU9147813554,USD,Alpenblick Asset Management S.A.,0.40%
+Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,I USD acc,LU9270917743,USD,Alpenblick Asset Management S.A.,nein
+Alpenblick Invest SICAV,5299L1RWBR2BB4YT3E08,Alpenblick Invest SICAV - Emerging Markets Debt Fund,A EUR hedged dis,LU9808340483,EUR,Alpenblick Asset Management S.A.,0.40%
+Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class A EUR,IE9729609219,EUR,Nordlicht Capital Management Limited,0.40%
+Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class B EUR,IE9860677512,EUR,Nordlicht Capital Management Limited,0.25%
+Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class I EUR,IE9861166812,EUR,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class I SEK,IE9927779160,SEK,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,6354N7TJEN5L62C8M525,Nordlicht Funds ICAV - Nordic Equity Fund,Class R CHF,IE9885635610,CHF,Nordlicht Capital Management Limited,0.50%
+Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class A EUR,IE9275147150,EUR,Nordlicht Capital Management Limited,0.40%
+Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class I EUR,IE9069193832,EUR,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class I USD,IE9844891809,USD,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,6354LUZNUVUTY1CL3U48,Nordlicht Funds ICAV - Global Short Duration Fund,Class Z EUR,IE9427369702,EUR,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class A EUR,IE9969385157,EUR,Nordlicht Capital Management Limited,0.40%
+Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class I EUR,IE9129132127,EUR,Nordlicht Capital Management Limited,nein
+Nordlicht Funds ICAV,63546V76MU3MBTXX7E85,Nordlicht Funds ICAV - Clean Energy Transition Fund,Class I CHF,IE9822112962,CHF,Nordlicht Capital Management Limited,nein

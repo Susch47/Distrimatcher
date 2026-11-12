@@ -270,14 +270,19 @@ def scan(pdf_bytes: bytes) -> bytes:
     return buf.getvalue()
 
 
+# Retro-Angabe wie in einer Fondsliste: A/B/R-Klassen zahlen Trail, I/Z sind "clean"
+RETRO = {"A": "0.40%", "B": "0.25%", "R": "0.50%", "I": "nein", "Z": "nein"}
+
+
 def universe_csv(path: Path) -> None:
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["umbrella", "fund_id", "fund_name", "share_class", "isin", "currency", "management_company"])
+        w.writerow(["umbrella", "fund_id", "fund_name", "share_class", "isin", "currency", "management_company", "retrocession"])
         for fam in (ALPEN, NORD):
             for f, classes in fam["funds"].items():
                 for c in classes:
-                    w.writerow([fam["umbrella"], fam["fund_leis"][f], f, c, fam["isins"][f][c], re.search(r"EUR|USD|CHF|SEK|GBP", c).group(0), fam["manco"]])
+                    w.writerow([fam["umbrella"], fam["fund_leis"][f], f, c, fam["isins"][f][c], re.search(r"EUR|USD|CHF|SEK|GBP", c).group(0), fam["manco"],
+                            RETRO.get(c.replace("Class ", "").split()[0], "")])
 
 
 def main() -> None:

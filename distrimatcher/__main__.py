@@ -51,8 +51,8 @@ def main() -> None:
             webview.start()
             server.should_exit = True
             return
-        except ImportError:
-            pass
+        except Exception as exc:  # kein pywebview / kein WebView2 -> Browser
+            print(f"Desktop-Fenster nicht verfügbar ({exc}), öffne Browser.")
     if not args.no_browser:
         webbrowser.open(url)
     try:
