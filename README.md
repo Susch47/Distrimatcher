@@ -1,5 +1,19 @@
 # Distrimatcher
 
+## Schnellstart: eine einzige HTML-Datei, ohne Installation
+
+**[Distrimatcher.html herunterladen](https://github.com/Susch47/Distrimatcher/releases/download/html/Distrimatcher.html)**, in einen beliebigen Ordner speichern und per Doppelklick in Edge oder Chrome öffnen. Es ist keine `.exe`, kein Server und kein Python nötig.
+
+* Alles läuft im Browser auf dem eigenen PC: PDF lesen, OCR (Deutsch/Englisch, eingebettet), Extraktion, Abgleich, Watchlist und E-Mail-Entwurf.
+* Daten bleiben in diesem Browser (IndexedDB). **Save project** schreibt alles in eine Projektdatei, z. B. neben die HTML-Datei; **Open project** lädt sie wieder.
+* Online ist nur die optionale GLEIF-Abfrage. Den SEC-Datensatz lädt man einmal als CSV herunter und importiert ihn.
+* Quellcode der HTML-Version: `web/`. Bauen mit `cd web && npm install && npm test && npm run build`, Ergebnis `web/dist/Distrimatcher.html`.
+  Ein Browser-Test der kompletten User Journey über `file://` läuft mit `node tools/e2e.js`.
+
+Die Python-/`.exe`-Variante (`distrimatcher/`) bleibt als Alternative erhalten. Beide nutzen dieselbe Logik; die JS-Tests prüfen, dass die Ergebnisse identisch sind.
+
+---
+
 Lokale Desktop-Anwendung zur Auswertung von **Distribution Agreements** und zum Abgleich mit öffentlichen Fondsdaten:
 
 1. **Agreements einlesen:** ZIP oder PDFs hochladen. Text wird ausgelesen, gescannte Seiten per OCR. Danach werden Vertragsparteien, Datum, Recht, Territorium, Gebühren, Kündigungsfrist, Funds, Share Classes und ISINs strukturiert erfasst.

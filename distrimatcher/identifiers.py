@@ -78,22 +78,27 @@ FUND_ISIN_COUNTRIES = set("LU IE DE CH AT FR GB US NL BE IT ES LI JE GG KY DK SE
 OCR_ISIN_CANDIDATE = re.compile(r"(?<![A-Z0-9])([A-Z0-9!|]{12})(?![A-Z0-9])")
 
 
+# characters OCR typically confuses with each letter of a country code
+CONFUSABLE = {"I": "1l|!7", "E": "5368F", "L": "1I|", "U": "V0O", "S": "5", "G": "6C", "B": "8", "O": "0D", "D": "0O", "C": "(G",
+              "H": "N", "K": "X", "Y": "V", "N": "H", "T": "7", "A": "4", "R": "K", "P": "F", "F": "EP", "J": "1"}
+
+
+def _similar(got: str, want: str) -> bool:
+    return got == want or got in CONFUSABLE.get(want, "")
+
+
 def repair_isin(token: str) -> str | None:
-    """Versucht eine durch OCR verfälschte ISIN zu reparieren; Ergebnis nur bei gültiger Prüfziffer."""
+    """Versucht eine durch OCR verfälschte ISIN zu reparieren; Ergebnis nur bei gültiger Prüfziffer und eindeutig."""
     t = token.upper()
     if is_valid_isin(t):
         return t
     if len(t) != 12:
         return None
-    head = _COUNTRY_FIX.get(t[:2], "".join(_LETTER_FOR.get(c, c) for c in t[:2]))
-    tail = t[-1]
-    tail = _DIGIT_FOR.get(tail, tail)
-    candidates = {head + t[2:11] + tail}
-    # mittlere 9 Stellen: bei Fonds-ISINs fast immer numerisch -> Buchstaben-Verwechsler in Ziffern
-    mid_num = "".join(_DIGIT_FOR.get(c, c) for c in t[2:11])
-    candidates.add(head + mid_num + tail)
-    valid = [c for c in candidates if is_valid_isin(c) and c[:2] in FUND_ISIN_COUNTRIES]
-    return valid[0] if len(set(valid)) == 1 else None
+    tail = _DIGIT_FOR.get(t[-1], t[-1])
+    mids = {t[2:11], "".join(_DIGIT_FOR.get(c, c) for c in t[2:11])}
+    heads = [cc for cc in FUND_ISIN_COUNTRIES if _similar(t[0], cc[0]) and _similar(t[1], cc[1])]
+    valid = {h + m + tail for h in heads for m in mids if is_valid_isin(h + m + tail)}
+    return next(iter(valid)) if len(valid) == 1 else None
 
 
 def repair_isins_in_text(text: str) -> tuple[str, list[tuple[str, str]]]:
