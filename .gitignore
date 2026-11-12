@@ -10,3 +10,4 @@ venv/
 samples/public_data/sec_series_class_*.csv
 web/node_modules/
 web/dist/
+dist/

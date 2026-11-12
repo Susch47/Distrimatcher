@@ -71,8 +71,15 @@
     const hasOther = segs.some((sg) => sg.str.length <= 30 && HEAD_OTHER_ITEM.test(sg.str));
     if (!hasFund || !hasOther || l.text.length > 120 || segs.length < 2 || segs.length > 8) return null;
     const cand = [...segs];
-    const above = lines[i - 1];
-    if (above && above.y - l.y < 2.6 * l.fs && above.text.length < 120 && segments(above).every((sg) => sg.str.length <= 30)) cand.push(...segments(above));
+    // multi-line headers: take up to 4 closely spaced short lines above
+    for (let k = i - 1, prevY = l.y; k >= 0 && k >= i - 4; k--) {
+      const above = lines[k];
+      const aSegs = segments(above);
+      if (above.y - prevY > 2.6 * l.fs || above.text.length >= 120 || /[.:;]$/.test(above.text) || aSegs.length > segs.length + 1
+          || !aSegs.every((sg) => sg.str.length <= 30)) break;
+      cand.push(...segments(above));
+      prevY = above.y;
+    }
     cand.sort((a, b) => a.x - b.x);
     const cols = [];
     for (const sg of cand) {
@@ -84,9 +91,14 @@
     for (const c of cols) c.title = clean(c.parts.sort((a, b) => b.y - a.y || a.x - b.x).map((p) => p.str).join(" "));
     return cols.length >= 2 ? cols : null;
   }
+  /* column of a text segment: boundaries lie halfway between the end of one header column and the
+     start of the next, so left-aligned data under centred headers lands in the right column */
   function colIndex(cols, x) {
     let idx = 0;
-    for (let k = 0; k < cols.length; k++) if (x + 10 >= cols[k].x) idx = k;
+    for (let k = 1; k < cols.length; k++) {
+      const boundary = Math.min(cols[k].x - 4, (cols[k - 1].end + cols[k].x) / 2);
+      if (x >= boundary) idx = k;
+    }
     return idx;
   }
   /* parse table body starting at line j; returns [table, nextIndex] */
@@ -104,7 +116,7 @@
       const overflow = segs.some((sg) => { const k = colIndex(cols, sg.x); return k < cols.length - 1 && sg.x + sg.w > cols[k + 1].x + 6 && sg.str.length > 25; });
       if (overflow || /^(?:IN WITNESS|\[|\d+\s+[A-Z][a-z]+\s+[a-z]+\s+[a-z]+)/.test(l.text) || segs[0].x < cols[0].x - 40) break;
       const cells = cols.map(() => []);
-      for (const sg of segs) cells[colIndex(cols, sg.x)].push(sg.str);
+      for (const sg of segs) { const k = colIndex(cols, sg.x); cells[k].push(sg.str); cols[k].dataX = Math.min(cols[k].dataX ?? Infinity, sg.x); }
       const texts = cells.map((c) => clean(c.join(" ")));
       const fundTxt = texts[fundCol];
       const lineIsin = isinCol >= 0 ? findIsins(texts[isinCol]).length > 0 : findIsins(l.text).length > 0;
@@ -122,13 +134,15 @@
     // continuation of a table from the previous page (no repeated header); allow a short page header
     // above it and a small horizontal shift of the whole layout
     if (carry && lines.length) {
+      const anchor = (c) => c.dataX ?? c.x;
       for (let k = 0; k < Math.min(3, lines.length); k++) {
         const segs = segments(lines[k]);
         if (segs.length < 2) continue;
-        const off = segs[0].x - carry[0].x;
-        const aligned = Math.abs(off) < 25 && segs.every((sg) => carry.some((c) => Math.abs(c.x + off - sg.x) < 26));
-        if (!aligned) continue;
-        const shifted = carry.map((c) => ({ ...c, x: c.x + off, end: c.end + off }));
+        // candidate horizontal shifts: none, or what aligns the first segment with a known column
+        const offs = [0, ...carry.map((c) => segs[0].x - anchor(c))].filter((o) => Math.abs(o) < 25);
+        const off = offs.find((o) => segs.every((sg) => carry.some((c) => Math.abs(anchor(c) + o - sg.x) < 26 || Math.abs(c.x + o - sg.x) < 26)));
+        if (off === undefined) continue;
+        const shifted = carry.map((c) => ({ ...c, x: c.x + off, end: c.end + off, dataX: c.dataX != null ? c.dataX + off : undefined }));
         const [table, j] = parseBody(lines, k, shifted, null);
         if (table.length > 1) { tables.push(table); last = shifted; }
         i = j;

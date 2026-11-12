@@ -65,6 +65,32 @@ for fam, cc in ((ALPEN, "LU"), (NORD, "IE")):
     fam["isins"] = {f: {c: isin(cc) for c in classes} for f, classes in fam["funds"].items()}
     fam["fund_leis"] = {f: lei(fam["umbrella_lei"][:4]) for f in fam["funds"]}
 
+# --- additional families (appended so that the ISINs above stay stable)
+SEEALP = {
+    "umbrella": "Seealp Swiss Funds",
+    "umbrella_lei": lei("5067"),
+    "manco": "Seealp Fondsleitung AG",
+    "manco_lei": lei("5067"),
+    "funds": {
+        "Seealp Swiss Equity Fund": ["A CHF dis", "B CHF acc", "I CHF acc", "N CHF acc"],
+        "Seealp CHF Bond Fund": ["A CHF dis", "B CHF acc", "I CHF acc"],
+        "Seealp Global Balanced Fund": ["B CHF acc", "A EUR hedged acc", "I CHF acc", "N CHF acc"],
+    },
+}
+KESTREL = {
+    "umbrella": "Kestrel Point Funds ICAV",
+    "umbrella_lei": lei("6354"),
+    "manco": "Kestrel Point Asset Management Limited",
+    "manco_lei": lei("6354"),
+    "funds": {
+        "Kestrel Point Funds ICAV - Global Credit Opportunities Fund": ["Class A USD", "Class A CHF hedged", "Class I USD", "Class Z USD"],
+        "Kestrel Point Funds ICAV - Asia Dividend Fund": ["Class A USD", "Class B EUR", "Class I USD"],
+    },
+}
+for fam, cc in ((SEEALP, "CH"), (KESTREL, "IE")):
+    fam["isins"] = {f: {c: isin(cc) for c in classes} for f, classes in fam["funds"].items()}
+    fam["fund_leis"] = {f: lei(fam["umbrella_lei"][:4]) for f in fam["funds"]}
+
 
 # ------------------------------------------------------------------ PDF-Helfer
 class Doc(FPDF):
@@ -252,6 +278,99 @@ def nordlicht_vertrag() -> bytes:
     return bytes(d.output())
 
 
+# ------------------------------------------------------------------ Vertrag 4: Seealp (Schweiz, Deutsch, Tabelle mit Retro-Spalte)
+def seealp_vertrag() -> bytes:
+    a = SEEALP
+    d = Doc("Vertriebsvertrag Seealp Swiss Funds / Bodensee Privatbank AG - fiktives Testdokument")
+    d.heading("VERTRIEBSVERTRAG")
+    d.para(
+        f"Vertriebsvertrag vom 12. Februar 2025 zwischen {a['manco']}, Zürich, als Fondsleitung der vertraglichen "
+        f"Anlagefonds {a['umbrella']} (die \"Fondsleitung\"), und Bodensee Privatbank AG, St. Gallen (die \"Vertriebsträgerin\")."
+    )
+    d.sub("1. Gegenstand")
+    d.para(
+        "Die Fondsleitung ermächtigt die Vertriebsträgerin nicht exklusiv, die in Anhang 1 aufgeführten Anteilsklassen in "
+        "folgenden Vertriebsländern anzubieten: Schweiz und Liechtenstein. Die Vertriebsträgerin hält die Vorgaben des "
+        "FIDLEG sowie die Verhaltensregeln der Asset Management Association Switzerland ein."
+    )
+    d.sub("2. Bestandespflegekommission")
+    d.para(
+        "Die Vertriebsträgerin erhält eine Bestandespflegekommission von 0.60% p.a. auf dem durchschnittlichen Bestand "
+        "ihrer Kunden in A- und B-Klassen. Für I-Klassen und N-Klassen werden keine Retrozessionen bezahlt. Die Abrechnung "
+        "erfolgt halbjährlich."
+    )
+    d.sub("3. Dauer und Kündigung")
+    d.para("Der Vertrag wird auf unbestimmte Zeit abgeschlossen und kann mit einer Kündigungsfrist von 6 Monaten auf ein Monatsende gekündigt werden.")
+    d.sub("4. Anwendbares Recht")
+    d.para("Dieser Vertrag unterliegt schweizerischem Recht. Gerichtsstand ist Zürich.")
+    signatures(d, (a["manco"], "Reto Ammann", "Geschäftsführer"), ("Bodensee Privatbank AG", "Sandra Keller", "Leiterin Fondsvertrieb"))
+    d.add_page()
+    d.heading("ANHANG 1 - Teilfonds und Anteilsklassen", 11)
+    rows = [["Teilfonds", "Anteilsklasse", "ISIN", "Bestandespflege"]]
+    covered = {
+        "Seealp Swiss Equity Fund": ["A CHF dis", "B CHF acc", "I CHF acc"],
+        "Seealp CHF Bond Fund": ["A CHF dis", "I CHF acc"],
+        "Seealp Global Balanced Fund": ["B CHF acc"],
+    }
+    for f, classes in covered.items():
+        for c in classes:
+            rows.append([f, c, a["isins"][f][c], "0.00%" if c[0] in "IN" else "0.60% p.a."])
+    d.grid(rows, (62, 30, 34, 30))
+    return bytes(d.output())
+
+
+# ------------------------------------------------------------------ Vertrag 5: Kestrel Point (Englisch, Amendment)
+def kestrel_amendment() -> bytes:
+    k = KESTREL
+    d = Doc("Amendment No. 2 - Kestrel Point Funds ICAV - fictitious test document")
+    d.heading("AMENDMENT NO. 2 TO THE DISTRIBUTION AGREEMENT")
+    d.para(
+        f"This Amendment No. 2 is dated as of 30 June 2025 and made by and between {k['umbrella']}, an Irish collective "
+        f"asset-management vehicle (the \"ICAV\"), {k['manco']} (the \"Manager\") and Bodensee Privatbank AG "
+        f"(the \"Distributor\"), amending the Distribution Agreement dated 1 March 2022."
+    )
+    d.sub("1. Amendment of Schedule 1")
+    d.para(
+        "Schedule 1 is replaced by the schedule below. The Distributor shall receive a trail commission of 50% of the "
+        "management fee on Class A and Class B shares. No trail commission is payable on Class I or Class Z shares."
+    )
+    rows = [["Sub-Fund", "Share Class", "ISIN", "Trail Commission"]]
+    covered = {
+        "Kestrel Point Funds ICAV - Global Credit Opportunities Fund": ["Class A USD", "Class I USD"],
+        "Kestrel Point Funds ICAV - Asia Dividend Fund": ["Class A USD", "Class I USD"],
+    }
+    for f, classes in covered.items():
+        for c in classes:
+            rows.append([f, c, k["isins"][f][c], "None" if c.split()[1] in "IZ" else "50% of mgmt fee"])
+    d.grid(rows, (70, 28, 34, 28))
+    d.sub("2. Notice")
+    d.para("Either party may terminate the Distribution Agreement by giving sixty (60) days' prior written notice. All other terms remain unchanged.")
+    d.sub("3. Governing law")
+    d.para("This Amendment shall be governed by and construed in accordance with the laws of Ireland.")
+    signatures(d, (k["manco"], "Aoife Brennan", "Director"), ("Bodensee Privatbank AG", "Sandra Keller", "Head of Fund Distribution"))
+    return bytes(d.output())
+
+
+# ------------------------------------------------------------------ Vertrag 6: Seealp Side Letter (gescannt, Englisch)
+def seealp_side_letter() -> bytes:
+    a = SEEALP
+    d = Doc("Side Letter Seealp Swiss Funds - fictitious test document")
+    d.heading("SIDE LETTER")
+    d.para(
+        f"Side letter dated 3 September 2025 to the Distribution Agreement dated 12 February 2025 between {a['manco']} "
+        f"(the \"Fund Management Company\") and Bodensee Privatbank AG (the \"Distributor\")."
+    )
+    d.para(
+        "With effect from 1 October 2025 the following share class is added to Annex 1. The trail commission of 0.60% p.a. "
+        "applies accordingly."
+    )
+    f = "Seealp Global Balanced Fund"
+    d.para(f"{f}   A EUR hedged acc   {a['isins'][f]['A EUR hedged acc']}")
+    d.para("All other provisions of the Distribution Agreement remain unchanged.")
+    signatures(d, (a["manco"], "Reto Ammann", "Managing Director"), ("Bodensee Privatbank AG", "Sandra Keller", "Head of Fund Distribution"))
+    return bytes(d.output())
+
+
 def scan(pdf_bytes: bytes) -> bytes:
     """Rendert ein PDF zu Bildern (leicht gedreht, verrauscht) -> 'gescanntes' PDF ohne Textlayer."""
     import pypdfium2 as pdfium
@@ -271,14 +390,14 @@ def scan(pdf_bytes: bytes) -> bytes:
 
 
 # Retro-Angabe wie in einer Fondsliste: A/B/R-Klassen zahlen Trail, I/Z sind "clean"
-RETRO = {"A": "0.40%", "B": "0.25%", "R": "0.50%", "I": "nein", "Z": "nein"}
+RETRO = {"A": "0.40%", "B": "0.25%", "R": "0.50%", "I": "nein", "Z": "nein", "N": "nein"}
 
 
 def universe_csv(path: Path) -> None:
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["umbrella", "fund_id", "fund_name", "share_class", "isin", "currency", "management_company", "retrocession"])
-        for fam in (ALPEN, NORD):
+        for fam in (ALPEN, NORD, SEEALP, KESTREL):
             for f, classes in fam["funds"].items():
                 for c in classes:
                     w.writerow([fam["umbrella"], fam["fund_leis"][f], f, c, fam["isins"][f][c], re.search(r"EUR|USD|CHF|SEK|GBP", c).group(0), fam["manco"],
@@ -288,12 +407,16 @@ def universe_csv(path: Path) -> None:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     files = {
-        "Alpenblick_Global_Distribution_Agreement_2024.pdf": alpenblick_agreement(),
-        "Alpenblick_Nachtrag_1_2025.pdf": alpenblick_nachtrag(),
-        "Nordlicht_Vertriebsvereinbarung_2023_SCAN.pdf": scan(nordlicht_vertrag()),
+        "Alpenblick_Global_Distribution_Agreement_2024.pdf": alpenblick_agreement,
+        "Alpenblick_Nachtrag_1_2025.pdf": alpenblick_nachtrag,
+        "Nordlicht_Vertriebsvereinbarung_2023_SCAN.pdf": lambda: scan(nordlicht_vertrag()),
+        "Seealp_Vertriebsvertrag_2025.pdf": seealp_vertrag,
+        "Kestrel_Point_Amendment_2_2025.pdf": kestrel_amendment,
+        "Seealp_Side_Letter_2025_SCAN.pdf": lambda: scan(seealp_side_letter()),
     }
-    for name, data in files.items():
-        (OUT / name).write_bytes(data)
+    for name, make in files.items():
+        if not (OUT / name).exists():  # keep existing test documents stable
+            (OUT / name).write_bytes(make())
     universe_csv(ROOT / "public_data" / "synthetic_fund_universe.csv")
     # Demo-ZIP mit allen Verträgen (synthetisch + öffentliche SEC-Exhibits)
     zpath = ROOT / "demo_agreements.zip"

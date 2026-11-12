@@ -130,7 +130,7 @@
 
   const FW = `[A-Z][${L}’'&./-]*`;
   const FUND_WORD = `(?:${FW}|of|and|the|&|SM|\\d{4})`;
-  const FUND_NAME_SRC = `(?<![${L}])((?:${FUND_WORD}\\s+){0,9}?(?:${FW}\\s+)(?:Fund|Portfolio|Allocation|ETF|Teilfonds|Sub-Fund)(?:\\s+(?:I{1,3}|II|IV))?)(?![${L}])(?!\\s+(?:Portfolios|Funds|Series|Trust|Inc)(?![${L}]))`;
+  const FUND_NAME_SRC = `(?<![${L}])((?:${FUND_WORD}\\s+){0,9}?(?:${FW}\\s+)(?:Fund|Portfolio|Allocation|ETF|Teilfonds|Sub-Fund)(?:\\s+(?:I{1,3}|II|IV))?)(?![${L}])(?!\\s+(?:Portfolios|Funds|Series|Trust|Inc|Distributors?|Services|Solutions|Management|Company|LLC|Administration)(?![${L}]))`;
   const FUND_NAME_RE = () => new RegExp(FUND_NAME_SRC, "gu");
   const FUND_GENERIC = new Set(["the fund", "each fund", "such fund", "a fund", "any fund", "the funds", "fund", "series fund", "the portfolio", "each portfolio", "money market fund", "investment fund", "the sub-fund", "each sub-fund", "other fund", "new fund", "underlying fund", "acquiring fund"]);
   const FUND_LEAD_STRIP = /^(?:The|Each|All|Any|Such|Of|And|For|To|Add|Shares of|Including|Under|With|In)\s+/i;
@@ -138,7 +138,8 @@
   const HEADER_FUND = /fund|portfolio|series|teilfonds|sub-?fund|compartment|fonds/i;
   const HEADER_CLASS = /class|klasse|share/i;
   const HEADER_ISIN = /isin/i;
-  const HEADER_FEE = /fee|provision|commission|gebühr|retro|%/i;
+  const HEADER_FEE = /fee|provision|commission|gebühr|retro|%|\brate\b|per annum|bestandespflege/i;
+  const CLASS_TITLE = /^(?:share\s+)?class|^klasse|^anteilsklasse/i;
 
   /* ================================================================ normalisation */
   function normFund(name) {
@@ -166,11 +167,11 @@
     const a = (alias || "").toLowerCase();
     const probe = `${name} ${alias || ""}`.toLowerCase();
     if (/distribut|vertrieb|underwriter|placement|jnld/.test(a)) return "distributor";
-    if (/management company|verwaltungsgesellschaft|manco|kvg|aifm/.test(a)) return "management_company";
+    if (/management company|verwaltungsgesellschaft|fondsleitung|manco|kvg|aifm/.test(a)) return "management_company";
     if (/advis|berater|investment manager/.test(a)) return "investment_adviser";
     if (/trust|fund|fonds|company|gesellschaft|sicav|icav|issuer|registrant|corporation/.test(a)) return "fund_entity";
     if (/distribut|vertrieb|underwriter|placement agent/.test(probe)) return "distributor";
-    if (/management company|verwaltungsgesellschaft|asset management|capital management|kapitalverwaltung/.test(probe)) return "management_company";
+    if (/management company|verwaltungsgesellschaft|fondsleitung|asset management|capital management|kapitalverwaltung/.test(probe)) return "management_company";
     if (/advis|berater/.test(probe)) return "investment_adviser";
     if (/trust|fund|sicav|icav|fonds|series|portfolio/.test(probe)) return "fund_entity";
     if (/bank|ag\b|gmbh|llc|s\.a\./.test(probe)) return "distributor";
@@ -180,7 +181,7 @@
   const LEGAL_FORM = "(?:LLC|L\\.L\\.C\\.|Inc\\.?|Ltd\\.?|Limited|S\\.A\\.|S\\.à\\s?r\\.l\\.|GmbH|AG|SICAV|ICAV|plc|LP|L\\.P\\.|N\\.V\\.|B\\.V\\.|KGaA|SE|Trust|Funds?(?:\\s+[IVX]+)?|Corporation|Company)";
   const ENTITY_SUFFIX = () => new RegExp(`(?<![${L}])${LEGAL_FORM}(?![${L}])`, "gu");
   const SKIP_ALIASES = new Set(["agreement", "1940 act", "1933 act", "act", "sec", "finra", "exchange act", "vertrag", "vereinbarung", "shares", "prospectus", "territory", "registration statement", "distribution plan", "board of trustees", "board", "eligible separate accounts", "participating insurance companies", "investment company act", "portfolios", "anteile", "vertriebsgebiet", "plan", "contracts", "nachtrag"]);
-  const PARTY_CUT = /,\s+(?:a|an|ein|eine|einem|einer)\s|,\s+(?:organized|incorporated|established|with\s+its|LEI|having|mit\s+Sitz)|\s+LEI\s|,\s+\d|,\s+[A-Z][a-z]+strasse|,\s+[A-Z][a-z]+ (?:Street|Avenue|Road)|\s+(?:acting|vertreten|represented)\b/i;
+  const PARTY_CUT = /,\s+(?:a|an|ein|eine|einem|einer)\s|,\s+(?:organized|incorporated|established|with\s+its|LEI|having|mit\s+Sitz)|\s+LEI\s|,\s+\d|,\s+[A-Z][a-z]+strasse|,\s+[A-Z][a-z]+ (?:Street|Avenue|Road)|\s+(?:acting|vertreten|represented)\b|,\s+[A-Z][\w.äöü ]{2,20},\s|\s+als\s/i;
 
   function entityName(segment) {
     let seg = clean(segment);
@@ -241,9 +242,9 @@
   const RETRO_KW = "retro(?:cession|zession)s?|trail(?:\\s+(?:fee|commission))?|bestande?s?(?:pflege)?(?:kommission|provision)|vertriebs(?:entsch(?:ä|ae)digung|provision|verg(?:ü|ue)tung)|kickback|rebate|distribution\\s+(?:and\\s+service\\s+)?fee|12b-1|service\\s+fee|commission\\s+de\\s+distribution";
   const RETRO_RE = new RegExp(RETRO_KW, "i");
   const RETRO_NEG_RE = () => new RegExp(`(?:no|keine?|not\\s+entitled\\s+to\\s+any|ohne)\\s+(?:${RETRO_KW})[^.]{0,80}?(?:on|for|für|auf|in)\\s+((?:Class(?:es)?\\s+[A-Z0-9-]+(?:\\s*(?:,|and|und)\\s*[A-Z0-9-]+)*)|[A-Z]{1,2}-?(?:Klassen|classes|shares|Anteile[n]?))`, "gi");
-  const CLASS_REF_RE = () => /\bClass(?:es)?\s+([A-Z][A-Z0-9]?(?:-\d)?)\b|\b([A-Z]{1,2})-(?:Klassen|Klasse|classes|Anteile[n]?|shares)\b/g;
+  const CLASS_REF_RE = () => /\bClass(?:es)?\s+([A-Z][A-Z0-9]?(?:-\d)?)\b|\b([A-Z]{1,2})-(?:Klassen|Klasse|classes|Anteile[n]?|shares)\b|\b([A-Z]{1,2})-(?=\s+(?:und|and|&|or|oder)\s+[A-Z]{1,2}-(?:Klassen|classes|Anteile))/g;
   const RETRO_NEG_REV_RE = () => new RegExp(`(?:für|for|on|auf)\\s+((?:Class(?:es)?\\s+[A-Z0-9-]+)|[A-Z]{1,2}-?(?:Klassen|classes|shares|Anteile[n]?))[^.]{0,40}?(?:keine?|no)\\s+(?:${RETRO_KW})`, "gi");
-  const classRefs = (s) => [...s.matchAll(CLASS_REF_RE())].map((m) => (m[1] || m[2]).toUpperCase());
+  const classRefs = (s) => [...s.matchAll(CLASS_REF_RE())].map((m) => (m[1] || m[2] || m[3]).toUpperCase());
 
   function extractRetrocession(text) {
     const t = clean(text);
@@ -259,6 +260,9 @@
       }
     }
     let excluded = [];
+    // sentences that deny a retrocession exclude every class they mention
+    const negRe = new RegExp(`(?:\\bno\\b|keine?|not\\s+entitled|ohne)\\s+(?:[${L}]+\\s+){0,2}(?:${RETRO_KW})|(?:${RETRO_KW})[^.]{0,40}\\b(?:is|are)\\s+not\\s+payable`, "iu");
+    for (const s of sentences) if (negRe.test(s)) excluded.push(...classRefs(s));
     for (const m of [...t.matchAll(RETRO_NEG_RE()), ...t.matchAll(RETRO_NEG_REV_RE())]) {
       const grp = m[1];
       const lm = /^([A-Z]{1,2})-?(?:Klassen|classes|shares|Anteile)/i.exec(grp);
@@ -389,6 +393,7 @@
     if (FUND_GENERIC.has(low) || n.length < 6 || n.length > 120) return false;
     if (words(n).length < 2) return false;
     if (/\b(?:shall|will|may|must|agreement|act|investment company|hereto|hereby|herein|pursuant|each|such|shares|class)\b/.test(low)) return false;
+    if (/[.;:]\s+[A-Z]/.test(n)) return false; // spans a sentence boundary ("Documents. The Fund")
     return true;
   }
   function stripFundLead(name) {
@@ -423,7 +428,7 @@
         fund: idx((c) => HEADER_FUND.test(c) && !HEADER_CLASS.test(c)),
         class: idx((c) => HEADER_CLASS.test(c)),
         isin: idx((c) => HEADER_ISIN.test(c)),
-        fee: idx((c) => HEADER_FEE.test(c) && !HEADER_CLASS.test(c)),
+        fee: idx((c) => HEADER_FEE.test(c) && !CLASS_TITLE.test(c)),
       };
       let body = table;
       if (cand.fund != null && (cand.class != null || cand.isin != null)) { header = cand; body = table.slice(1); }

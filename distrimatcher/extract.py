@@ -60,7 +60,7 @@ ALL_CLASSES_RE = re.compile(r"all\s+(?:share\s+)?classes|sämtliche\s+anteilskla
 
 FUND_WORD = r"(?:[A-Z][\w’'&./\-]*|of|and|the|&|SM|\d{4})"
 FUND_NAME_RE = re.compile(
-    rf"\b((?:{FUND_WORD}\s+){{0,9}}?(?:[A-Z][\w’'&./\-]*\s+)(?:Fund|Portfolio|Allocation|ETF|Teilfonds|Sub-Fund)(?:\s+(?:I{{1,3}}|II|IV))?)\b(?!\s+(?:Portfolios|Funds|Series|Trust|Inc)\b)"
+    rf"\b((?:{FUND_WORD}\s+){{0,9}}?(?:[A-Z][\w’'&./\-]*\s+)(?:Fund|Portfolio|Allocation|ETF|Teilfonds|Sub-Fund)(?:\s+(?:I{{1,3}}|II|IV))?)\b(?!\s+(?:Portfolios|Funds|Series|Trust|Inc|Distributors?|Services|Solutions|Management|Company|LLC|Administration)\b)"
 )
 FUND_GENERIC = {
     "the fund", "each fund", "such fund", "a fund", "any fund", "the funds", "fund", "series fund",
@@ -72,7 +72,8 @@ FUND_LEAD_STRIP = re.compile(r"^(?:The|Each|All|Any|Such|Of|And|For|To|Add|Share
 HEADER_FUND = re.compile(r"fund|portfolio|series|teilfonds|sub-?fund|compartment|fonds", re.I)
 HEADER_CLASS = re.compile(r"class|klasse|share", re.I)
 HEADER_ISIN = re.compile(r"isin", re.I)
-HEADER_FEE = re.compile(r"fee|provision|commission|gebühr|retro|%", re.I)
+HEADER_FEE = re.compile(r"fee|provision|commission|gebühr|retro|%|\brate\b|per annum|bestandespflege", re.I)
+CLASS_TITLE = re.compile(r"^(?:share\s+)?class|^klasse|^anteilsklasse", re.I)
 
 
 # ---------------------------------------------------------------- Datenmodell
@@ -177,7 +178,7 @@ def _party_role(name: str, alias: str | None) -> str:
     # Der definierte Begriff (Alias) ist das stärkste Signal
     if re.search(r"distribut|vertrieb|underwriter|placement|jnld", a):
         return "distributor"
-    if re.search(r"management company|verwaltungsgesellschaft|manco|kvg|aifm", a):
+    if re.search(r"management company|verwaltungsgesellschaft|fondsleitung|manco|kvg|aifm", a):
         return "management_company"
     if re.search(r"advis|berater|investment manager", a):
         return "investment_adviser"
@@ -185,7 +186,7 @@ def _party_role(name: str, alias: str | None) -> str:
         return "fund_entity"
     if re.search(r"distribut|vertrieb|underwriter|placement agent", probe):
         return "distributor"
-    if re.search(r"management company|verwaltungsgesellschaft|asset management|capital management|kapitalverwaltung", probe):
+    if re.search(r"management company|verwaltungsgesellschaft|fondsleitung|asset management|capital management|kapitalverwaltung", probe):
         return "management_company"
     if re.search(r"advis|berater", probe):
         return "investment_adviser"
@@ -208,7 +209,7 @@ SKIP_ALIASES = {
     "anteile", "vertriebsgebiet", "plan", "contracts", "nachtrag",
 }
 PARTY_CUT = re.compile(
-    r",\s+(?:a|an|ein|eine|einem|einer)\s|,\s+(?:organized|incorporated|established|with\s+its|LEI|having|mit\s+Sitz)|\s+LEI\s|,\s+\d|,\s+[A-Z][a-z]+strasse|,\s+[A-Z][a-z]+ (?:Street|Avenue|Road)|\s+(?:acting|vertreten|represented)\b",
+    r",\s+(?:a|an|ein|eine|einem|einer)\s|,\s+(?:organized|incorporated|established|with\s+its|LEI|having|mit\s+Sitz)|\s+LEI\s|,\s+\d|,\s+[A-Z][a-z]+strasse|,\s+[A-Z][a-z]+ (?:Street|Avenue|Road)|\s+(?:acting|vertreten|represented)\b|,\s+[A-Z][\w.äöü ]{2,20},\s|\s+als\s",
     re.I,
 )
 
@@ -298,7 +299,7 @@ RETRO_NEG_RE = re.compile(
 )
 
 
-CLASS_REF_RE = re.compile(r"\bClass(?:es)?\s+([A-Z][A-Z0-9]?(?:-\d)?)\b|\b([A-Z]{1,2})-(?:Klassen|Klasse|classes|Anteile[n]?|shares)\b")
+CLASS_REF_RE = re.compile(r"\bClass(?:es)?\s+([A-Z][A-Z0-9]?(?:-\d)?)\b|\b([A-Z]{1,2})-(?:Klassen|Klasse|classes|Anteile[n]?|shares)\b|\b([A-Z]{1,2})-(?=\s+(?:und|and|&|or|oder)\s+[A-Z]{1,2}-(?:Klassen|classes|Anteile))")
 RETRO_NEG_REV_RE = re.compile(
     rf"(?:für|for|on|auf)\s+((?:Class(?:es)?\s+[A-Z0-9-]+)|[A-Z]{{1,2}}-?(?:Klassen|classes|shares|Anteile[n]?))[^.]{{0,40}}?(?:keine?|no)\s+(?:{RETRO_KW})",
     re.I,
@@ -306,7 +307,7 @@ RETRO_NEG_REV_RE = re.compile(
 
 
 def _class_refs(s: str) -> list[str]:
-    return [(m.group(1) or m.group(2)).upper() for m in CLASS_REF_RE.finditer(s)]
+    return [(m.group(1) or m.group(2) or m.group(3)).upper() for m in CLASS_REF_RE.finditer(s)]
 
 
 def extract_retrocession(text: str) -> dict:
@@ -321,6 +322,10 @@ def extract_retrocession(text: str) -> dict:
             rate = clean(m.group(1))
             break
     excluded: list[str] = []
+    # sentences that deny a retrocession exclude every class they mention
+    for s_ in sentences:
+        if re.search(rf"(?:\bno\b|keine?|not\s+entitled|ohne)\s+(?:\w+\s+){{0,2}}(?:{RETRO_KW})|(?:{RETRO_KW})[^.]{{0,40}}\b(?:is|are)\s+not\s+payable", s_, re.I):
+            excluded += _class_refs(s_)
     for m in list(RETRO_NEG_RE.finditer(t)) + list(RETRO_NEG_REV_RE.finditer(t)):
         grp = m.group(1)
         lm = re.match(r"([A-Z]{1,2})-?(?:Klassen|classes|shares|Anteile)", grp, re.I)
@@ -509,6 +514,8 @@ def _fund_name_ok(name: str) -> bool:
         return False
     if re.search(r"\b(?:shall|will|may|must|agreement|act|investment company|hereto|hereby|herein|pursuant|each|such|shares|class)\b", low):
         return False
+    if re.search(r"[.;:]\s+[A-Z]", n):  # spans a sentence boundary ("Documents. The Fund")
+        return False
     return True
 
 
@@ -559,7 +566,7 @@ def funds_from_tables(pdf_bytes: bytes, funds: dict[str, FundEntry], ocr_pages: 
                     "fund": next((i for i, c in enumerate(first) if HEADER_FUND.search(c) and not HEADER_CLASS.search(c)), None),
                     "class": next((i for i, c in enumerate(first) if HEADER_CLASS.search(c)), None),
                     "isin": next((i for i, c in enumerate(first) if HEADER_ISIN.search(c)), None),
-                    "fee": next((i for i, c in enumerate(first) if HEADER_FEE.search(c) and not HEADER_CLASS.search(c)), None),
+                    "fee": next((i for i, c in enumerate(first) if HEADER_FEE.search(c) and not CLASS_TITLE.search(c)), None),
                 }
                 body = table
                 if cand["fund"] is not None and (cand["class"] is not None or cand["isin"] is not None):

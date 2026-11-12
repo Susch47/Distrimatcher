@@ -1,0 +1,50 @@
+DISTRIMATCHER – test package (single-file edition)
+==================================================
+
+What it is
+  Distrimatcher reads distribution agreements (PDF / ZIP, also scanned documents), compares them with fund
+  data and lists every share class that is NOT covered by an agreement – with a focus on share classes that
+  pay retrocessions. It is ONE HTML file: no installation, no server, no admin rights. Everything runs in
+  your browser on your own PC; agreement contents never leave the computer.
+
+Contents of this package
+  Distrimatcher.html             the application – double-click to open in Edge or Chrome
+  Distrimatcher-Brochure.pdf     product brochure and illustrated user manual (14 pages)
+  INSTRUCTIONS.txt               this file
+  Test data\
+    Test-Agreements.zip          all 17 test agreements in one ZIP (upload this in step 1)
+    Agreements (PDF)\            the same 17 agreements as single PDF files
+      sec_public\                11 real, public agreements / schedules from SEC EDGAR (US funds)
+      synthetic\                 6 fictitious EU / Swiss agreements (incl. 2 scanned documents for OCR)
+    Fund_list_with_retro.csv     fund list (ISINs + retrocession) for the fictitious fund houses
+    SEC_dataset_2026.csv         public SEC "Investment Company Series and Class" dataset (US funds)
+  Graphics\                      logo, business concept and architecture graphics (PNG)
+
+Try it (about 5 minutes)
+  1  Double-click Distrimatcher.html. The app opens empty.
+  2  Agreements: drag "Test data\Test-Agreements.zip" onto the upload area.
+     17 agreements are read; the two *_SCAN.pdf files are read with OCR (takes a little longer).
+  3  Overview:
+       SEC box  -> "Import SEC dataset" -> Test data\SEC_dataset_2026.csv
+                -> "Suggest from agreements" -> "Load selected"
+       File import -> "Import file" -> Test data\Fund_list_with_retro.csv
+     The waterfall shows Fund IDs -> ISINs -> found in agreements -> covered -> gaps.
+     The (i) button opens the manual.
+  4  Watchlist: confirm / dismiss gaps, "Add to agreement", "Open agreement".
+  5  Provider e-mail: choose e.g. "Seealp Swiss Funds" -> "Download .eml" -> opens as draft in Outlook.
+  6  Activity log: everything that happened. "Save project" (top right) keeps all data in one file.
+
+What the fictitious test agreements contain
+  Alpenblick Invest SICAV (LU)      Global distribution agreement (EN) + German amendment
+  Nordlicht Funds ICAV (IE)         German distribution agreement, scanned (OCR)
+  Seealp Swiss Funds (CH)           Swiss "Vertriebsvertrag" with Bestandespflegekommission (DE)
+                                    + scanned side letter adding a hedged share class (OCR)
+  Kestrel Point Funds ICAV (IE)     Amendment No. 2 with a new schedule and trail commission
+  All companies, funds, ISINs and people in these documents are FICTITIOUS (check digits are valid so that
+  the validation works). The SEC documents are public filings of US fund companies.
+
+Notes
+  - Your data stays in this browser on this PC. Clearing the browser's site data deletes it – use
+    "Save project" to keep a copy.
+  - Only the GLEIF button needs internet access. Everything else works offline.
+  - Problems? The app shows notes per document; see also the brochure, page 12 (FAQ).

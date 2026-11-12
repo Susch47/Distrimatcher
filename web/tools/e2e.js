@@ -26,7 +26,7 @@ const fs = require("fs");
 
   // 1 upload ZIP (incl. scanned PDF -> OCR)
   await p.setInputFiles("#file", path.join(root, "samples/demo_agreements.zip"));
-  await p.waitForFunction(() => document.querySelectorAll("#doc-table tbody tr").length >= 9 &&
+  await p.waitForFunction(() => document.querySelectorAll("#doc-table tbody tr").length >= 17 &&
     ![...document.querySelectorAll("#doc-table tbody td:nth-child(2)")].some((td) => /reading|queued/.test(td.textContent)), null, { timeout: 240000 });
   const rows = await p.$$eval("#doc-table tbody tr", (trs) => trs.map((tr) => [...tr.children].map((td) => td.textContent.trim())));
   const scan = rows.find((r) => r[0].includes("SCAN"));
@@ -100,11 +100,11 @@ const fs = require("fs");
   p.once("dialog", (d) => d.accept());
   await p.setInputFiles("#proj-file", projPath); await p.waitForTimeout(3000);
   const n = await p.$$eval("#doc-table tbody tr", (t) => t.length);
-  check(n === 9, `project file restores 9 agreements (got ${n})`);
+  check(n === 17, `project file restores 17 agreements (got ${n})`);
 
   // persistence after reload
   await p.reload(); await p.waitForTimeout(1500);
-  check((await p.$$eval("#doc-table tbody tr", (t) => t.length)) === 9, "data persists after reopening the file");
+  check((await p.$$eval("#doc-table tbody tr", (t) => t.length)) === 17, "data persists after reopening the file");
 
   check(errs.length === 0, "no JavaScript errors" + (errs.length ? ": " + errs.slice(0, 3).join(" | ") : ""));
   await b.close();

@@ -1,1 +1,1608 @@
-{"SEC_artisan_2022.pdf": {"document_type": "Amendment / Schedule", "agreement_date": "May 6, 2022", "fund_entity": null, "distributor": null, "management_company": null, "governing_law": null, "jurisdiction": null, "exclusivity": null, "termination_notice": null, "territory": [], "signatories": ["Gregory K. Ramirez", "Laura E. Simpson"], "retro": {"agreed": null, "rate": null, "included_classes": [], "excluded_classes": []}, "funds": {"Artisan Developing World Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Emerging Markets Debt Opportunities Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Floating Rate Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Focus Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Global Discovery Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Global Equity Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Global Opportunities Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Global Unconstrained Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Global Value Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan High Income Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan International Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan International Explorer Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan International Small-Mid Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan International Value Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Mid Cap Value Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Small Cap Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Sustainable Emerging Markets Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Value Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Value Income Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Mid Cap Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]], "Artisan Select Equity Fund": [["Advisor Shares", null, null], ["Institutional Shares", null, null], ["Investor Shares", null, null]]}}, "SEC_axa_premier_vip_2020.pdf": {"document_type": "Distribution Agreement", "agreement_date": "November 13, 2019", "fund_entity": "AXA Premier VIP Trust", "distributor": "AXA Distributors, LLC", "management_company": null, "governing_law": null, "jurisdiction": null, "exclusivity": null, "termination_notice": null, "territory": [], "signatories": ["Kenneth Kozlowski", "Kevin Kennedy"], "retro": {"agreed": null, "rate": null, "included_classes": [], "excluded_classes": []}, "funds": {"EQ/Conservative Allocation": [["Class A", null, null]], "EQ/Conservative-Plus Allocation": [["Class A", null, null]], "EQ/Moderate Allocation": [["Class A", null, null]], "EQ/Moderate-Plus Allocation": [["Class A", null, null]], "EQ/Aggressive Allocation": [["Class A", null, null]]}}, "SEC_carillon_2025.pdf": {"document_type": "Distribution Agreement", "agreement_date": "January 18, 2025", "fund_entity": "Carillon Series Trust", "distributor": null, "management_company": null, "governing_law": null, "jurisdiction": null, "exclusivity": null, "termination_notice": null, "territory": [], "signatories": [], "retro": {"agreed": true, "rate": "0.50%", "included_classes": ["A"], "excluded_classes": []}, "funds": {"Carillon ClariVest Capital Appreciation Fund": [["Class A", null, true], ["Class C", null, true], ["Class I", null, false], ["Class R-6", null, false]], "Carillon Eagle Growth & Income Fund": [["Class A", null, true], ["Class C", null, true], ["Class I", null, false], ["Class R-6", null, false]], "Carillon ClariVest International Stock Fund": [], "Carillon Eagle Mid Cap Growth Fund": [], "Carillon Eagle Small Cap Growth Fund": [], "Carillon Reams Core Bond Fund": [], "Carillon Reams Core Plus Bond Fund": [], "Carillon Scout Mid Cap Fund": [], "Carillon Reams Unconstrained Bond Fund": [], "Carillon Chartwell Real Income Fund": [], "Carillon Chartwell Small Cap Value Fund": [], "Carillon Chartwell Small Cap Growth Fund": [], "Carillon Chartwell Small Cap Fund": [], "Carillon Chartwell Mid Cap Value Fund": [], "Carillon Chartwell Short Duration High Yield Fund": []}}, "SEC_highland_ii_2022.pdf": {"document_type": "Distribution Agreement", "agreement_date": "October 25, 2021", "fund_entity": "Highland Funds I, Highland Funds II", "distributor": null, "management_company": null, "governing_law": null, "jurisdiction": null, "exclusivity": null, "termination_notice": null, "territory": [], "signatories": [], "retro": {"agreed": null, "rate": null, "included_classes": [], "excluded_classes": []}, "funds": {"NexPoint Event Driven Fund": [], "Highland/iBoxx Senior Loan ETF": [], "NexPoint Merger Arbitrage Fund": [], "Highland Small-Cap Equity Fund": []}}, "SEC_jnl_investors_2022.pdf": {"document_type": "Distribution Agreement", "agreement_date": "September 10, 2021", "fund_entity": "JNL Investors Series Trust", "distributor": "Jackson National Life Distributors LLC", "management_company": null, "governing_law": "Illinois", "jurisdiction": null, "exclusivity": "exclusive", "termination_notice": null, "territory": [], "signatories": ["Norma M. Mendez", "Kristen K. Leeman", "Jennifer Nuttall", "Alison Reed"], "retro": {"agreed": null, "rate": null, "included_classes": [], "excluded_classes": []}, "funds": {"JNL Government Money Market Fund": [["Institutional Class", null, false]], "JNL Securities Lending Collateral Fund": [["Institutional Class", null, false]]}}, "SEC_nexpoint_2025.pdf": {"document_type": "Distribution Agreement", "agreement_date": "June 30, 2025", "fund_entity": "NexPoint Funds I, NexPoint Funds II", "distributor": null, "management_company": null, "governing_law": null, "jurisdiction": null, "exclusivity": null, "termination_notice": null, "territory": [], "signatories": [], "retro": {"agreed": null, "rate": null, "included_classes": [], "excluded_classes": []}, "funds": {"NexPoint Event Driven Fund": [], "NexPoint Merger Arbitrage Fund": [], "NexPoint Credit Catalyst Fund": [], "NexPoint Climate Tech Fund": []}}, "Alpenblick_Global_Distribution_Agreement_2024.pdf": {"document_type": "Distribution Agreement", "agreement_date": "15 March 2024", "fund_entity": "Alpenblick Invest SICAV", "distributor": "Seeland Vertriebs AG", "management_company": "Alpenblick Asset Management S.A.", "governing_law": "Grand Duchy of Luxembourg", "jurisdiction": "Luxembourg City", "exclusivity": "non-exclusive", "termination_notice": "90 days", "territory": ["Austria", "Germany", "Liechtenstein", "Switzerland"], "signatories": ["Claire Weber", "Martin Keller"], "retro": {"agreed": true, "rate": "40% of the management fee", "included_classes": [], "excluded_classes": ["I"]}, "funds": {"Alpenblick Invest SICAV - Global Equity Fund": [["A EUR acc", "LU9839136744", true], ["A EUR dis", "LU9982702813", true], ["I EUR acc", "LU9148987654", false]], "Alpenblick Invest SICAV - Euro Corporate Bond Fund": [["A EUR acc", "LU9321295867", true], ["I EUR acc", "LU9040228736", false]], "Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund": [["A CHF acc", "LU9285093068", true], ["I CHF acc", "LU9101408433", false]]}}, "Alpenblick_Nachtrag_1_2025.pdf": {"document_type": "Amendment / Schedule", "agreement_date": "1. Oktober 2025", "fund_entity": "Alpenblick Invest SICAV", "distributor": "Seeland Vertriebs AG", "management_company": "Alpenblick Asset Management S.A.", "governing_law": "Luxembourg law", "jurisdiction": "Luxemburg", "exclusivity": null, "termination_notice": null, "territory": ["Italy"], "signatories": ["Claire Weber", "Martin Keller"], "retro": {"agreed": true, "rate": "35% der Verwaltungsverg\u00fctung", "included_classes": ["A"], "excluded_classes": ["I"]}, "funds": {"Alpenblick Invest SICAV - Sustainable Infrastructure Fund": [["A EUR acc", "LU9197580160", true], ["I EUR acc", "LU9654979210", false]], "Alpenblick Invest SICAV - Global Equity Fund": [["I CHF hedged acc", "LU9094987500", false]]}}}
+{
+"SEC_amg_funds_i_2025.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "September 17, 2015",
+"fund_entity": "AMG Funds I",
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [
+"Thomas Disbrow",
+"Keitha L. Kinne"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"AMG Systematica Trend-Enhanced Markets Fund": [],
+"AMG Systematica Managed Futures Strategy Fund": [],
+"AMG Frontier Small Cap Growth Fund": [],
+"AMG GW&K Core Bond ESG Fund": [],
+"AMG River Road Large Cap Value Select Fund": [],
+"AMG Veritas China Fund": [],
+"AMG Veritas Global Focus Fund": [],
+"AMG Veritas Global Real Return Fund": [],
+"AMENDED AND RESTATED APPENDIX A AMG Boston Common Global Impact Fund": []
+}
+},
+"SEC_artisan_2022.pdf": {
+"document_type": "Amendment / Schedule",
+"agreement_date": "May 6, 2022",
+"fund_entity": null,
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [
+"Gregory K. Ramirez",
+"Laura E. Simpson"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"Artisan Developing World Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Emerging Markets Debt Opportunities Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Floating Rate Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Focus Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Global Discovery Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Global Equity Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Global Opportunities Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Global Unconstrained Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Global Value Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan High Income Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan International Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan International Explorer Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan International Small-Mid Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan International Value Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Mid Cap Value Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Small Cap Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Sustainable Emerging Markets Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Value Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Value Income Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Mid Cap Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+],
+"Artisan Select Equity Fund": [
+[
+"Advisor Shares",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+],
+[
+"Investor Shares",
+null,
+null
+]
+]
+}
+},
+"SEC_axa_premier_vip_2020.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "November 13, 2019",
+"fund_entity": "AXA Premier VIP Trust",
+"distributor": "AXA Distributors, LLC",
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [
+"Kenneth Kozlowski",
+"Kevin Kennedy"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"EQ/Conservative Allocation": [
+[
+"Class A",
+null,
+null
+]
+],
+"EQ/Conservative-Plus Allocation": [
+[
+"Class A",
+null,
+null
+]
+],
+"EQ/Moderate Allocation": [
+[
+"Class A",
+null,
+null
+]
+],
+"EQ/Moderate-Plus Allocation": [
+[
+"Class A",
+null,
+null
+]
+],
+"EQ/Aggressive Allocation": [
+[
+"Class A",
+null,
+null
+]
+]
+}
+},
+"SEC_bbh_trust_2025.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "April 16, 2018",
+"fund_entity": "BBH Trust",
+"distributor": "ALPS Distributors, Inc",
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": "exclusive",
+"termination_notice": "60 days",
+"territory": [],
+"signatories": [
+"Charles H. Schreiber",
+"Steven B. Price",
+"Thomas A. Carter",
+"John A. Gehret",
+"Radford W. Klotz",
+"Radford Klotz",
+"Daniel Greifenkamp",
+"Daniel J. Greifenkamp"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"BBH Money Market Fund": [
+[
+"Institutional Shares",
+null,
+null
+]
+],
+"BBH Broad Market Fund": [
+[
+"Class I",
+null,
+null
+],
+[
+"Class N",
+null,
+null
+]
+],
+"BBH Global Core Select and BBH Intermediate Municipal Bond Fund": [
+[
+"Retail Class",
+null,
+null
+],
+[
+"Select Class",
+null,
+null
+]
+],
+"BBH Core Select BBH International Equity Fund": [
+[
+"Class I",
+null,
+null
+],
+[
+"Class N",
+null,
+null
+],
+[
+"Institutional Shares",
+null,
+null
+]
+],
+"BBH Core Select BBH Partner Fund": [],
+"International Equity BBH Limited Duration Fund": [
+[
+"Class I",
+null,
+null
+],
+[
+"Class N",
+null,
+null
+],
+[
+"Retail Class",
+null,
+null
+],
+[
+"Select Class",
+null,
+null
+]
+]
+}
+},
+"SEC_capitol_series_canterbury_2025.pdf": {
+"document_type": "Amendment / Schedule",
+"agreement_date": "July 1, 2025",
+"fund_entity": "Capitol Series Trust",
+"distributor": "Ultimus Fund",
+"management_company": null,
+"governing_law": "State of Indiana",
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": "60 days",
+"territory": [],
+"signatories": [
+"Matthew J. Miller",
+"Kevin Guerette",
+"Ed Stubbins"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"FullerThaler Behavioral Small-Cap Equity Fund": [],
+"FullerThaler Behavioral Small-Cap Growth Fund": [],
+"FullerThaler Behavioral Mid-Cap Value Fund": [],
+"FullerThaler Behavioral Unconstrained Equity Fund": [],
+"FullerThaler Behavioral Small-Mid Core Equity Fund": [],
+"FullerThaler Behavioral Micro-Cap Equity Fund": [],
+"FullerThaler Behavioral Mid-Cap Equity Fund": []
+}
+},
+"SEC_carillon_2025.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "January 18, 2025",
+"fund_entity": "Carillon Series Trust",
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [],
+"retro": {
+"agreed": true,
+"rate": "0.50%",
+"included_classes": [
+"A"
+],
+"excluded_classes": []
+},
+"funds": {
+"Carillon ClariVest Capital Appreciation Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R-6",
+null,
+false
+]
+],
+"Carillon Eagle Growth & Income Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R-6",
+null,
+false
+]
+],
+"Carillon ClariVest International Stock Fund": [],
+"Carillon Eagle Mid Cap Growth Fund": [],
+"Carillon Eagle Small Cap Growth Fund": [],
+"Carillon Reams Core Bond Fund": [],
+"Carillon Reams Core Plus Bond Fund": [],
+"Carillon Scout Mid Cap Fund": [],
+"Carillon Reams Unconstrained Bond Fund": [],
+"Carillon Chartwell Real Income Fund": [],
+"Carillon Chartwell Small Cap Value Fund": [],
+"Carillon Chartwell Small Cap Growth Fund": [],
+"Carillon Chartwell Small Cap Fund": [],
+"Carillon Chartwell Mid Cap Value Fund": [],
+"Carillon Chartwell Short Duration High Yield Fund": []
+}
+},
+"SEC_empower_funds_2024.pdf": {
+"document_type": "Amendment / Schedule",
+"agreement_date": "October 25, 2024",
+"fund_entity": "Empower Funds",
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [
+"Kelly B. New",
+"Robert Ettinger"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"Flexible Bond Fund": [],
+"International Equity Fund": [],
+"Empower Short Duration Bond Fund": [],
+"Empower Moderate Profile Fund": [
+[
+"Class L",
+null,
+null
+]
+],
+"Empower Moderately Aggressive Profile Fund": [],
+"Balanced Fund": [
+[
+"Class L",
+null,
+null
+]
+],
+"Schedule A Empower Bond Index Fund": [
+[
+"Class L",
+null,
+null
+]
+],
+"Institutional and Investor Empower Core Bond Fund": [],
+"Institutional and Investor Empower Emerging Markets Equity Fund": [],
+"Institutional and Investor Empower Global Bond Fund": [],
+"Institutional and Investor Empower High Yield Bond Fund": [],
+"Institutional and Investor Empower Inflation-Protected Securities Fund": [],
+"Institutional and Investor Empower International Growth Fund": [],
+"Institutional and Investor Empower International Index Fund": [],
+"Institutional and Investor Empower International Value Fund": [],
+"Institutional and Investor Empower Large Cap Growth Fund": [],
+"Institutional and Investor Empower Large Cap Value Fund": [],
+"Investor II Empower Mid Cap Value Fund": [],
+"Institutional and Investor Empower Multi-Sector Bond Fund": [],
+"Institutional and Investor Empower Real Estate Index Fund": [],
+"Institutional and Investor Empower Small Cap Growth Fund": [],
+"Institutional and Investor Empower Small Cap Value Fund": [],
+"Institutional and Investor Empower Aggressive Profile Fund": [],
+"Institutional and Investor Empower Conservative Profile Fund": [
+[
+"Class L",
+null,
+null
+]
+],
+"Institutional and Investor Empower Moderately Conservative Profile Fund": [
+[
+"Class L",
+null,
+null
+]
+]
+}
+},
+"SEC_highland_ii_2022.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "October 25, 2021",
+"fund_entity": "Highland Funds I, Highland Funds II",
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"NexPoint Event Driven Fund": [],
+"Highland/iBoxx Senior Loan ETF": [],
+"NexPoint Merger Arbitrage Fund": [],
+"Highland Small-Cap Equity Fund": []
+}
+},
+"SEC_ivy_funds_2026.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "December 1, 2025",
+"fund_entity": null,
+"distributor": "DELAWARE DISTRIBUTORS, L.P.",
+"management_company": null,
+"governing_law": "Commonwealth of Pennsylvania",
+"jurisdiction": null,
+"exclusivity": "exclusive",
+"termination_notice": "30 days",
+"territory": [],
+"signatories": [
+"Richard Salus",
+"Shawn K. Lytle"
+],
+"retro": {
+"agreed": true,
+"rate": "0.25%",
+"included_classes": [
+"A",
+"C",
+"I"
+],
+"excluded_classes": []
+},
+"funds": {
+"Nomura Asset Strategy Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Balanced Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Core Equity Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+]
+],
+"Nomura Climate Solutions Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Global Bond Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Global Growth Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+]
+],
+"Nomura International Core Equity Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Large Cap Growth Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Mid Cap Growth Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+]
+],
+"Nomura Mid Cap Income Opportunities Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Natural Resources Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Science and Technology Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+]
+],
+"Nomura Small Cap Growth Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Smid Cap Core Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+false
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+false
+],
+[
+"Class Y",
+null,
+true
+]
+],
+"Nomura Systematic Emerging Markets Equity Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+]
+],
+"Delaware Investments Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+true
+],
+[
+"Class Names",
+null,
+null
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+null
+],
+[
+"Y Class",
+null,
+true
+]
+],
+"Securities Fund": [
+[
+"Class A",
+null,
+true
+],
+[
+"Class C",
+null,
+true
+],
+[
+"Class I",
+null,
+true
+],
+[
+"Class R",
+null,
+true
+],
+[
+"Class R6",
+null,
+null
+],
+[
+"Class Y",
+null,
+true
+]
+]
+}
+},
+"SEC_jnl_investors_2022.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "September 10, 2021",
+"fund_entity": "JNL Investors Series Trust",
+"distributor": "Jackson National Life Distributors LLC",
+"management_company": null,
+"governing_law": "Illinois",
+"jurisdiction": null,
+"exclusivity": "exclusive",
+"termination_notice": null,
+"territory": [],
+"signatories": [
+"Norma M. Mendez",
+"Kristen K. Leeman",
+"Jennifer Nuttall",
+"Alison Reed"
+],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"JNL Government Money Market Fund": [
+[
+"Institutional Class",
+null,
+false
+]
+],
+"JNL Securities Lending Collateral Fund": [
+[
+"Institutional Class",
+null,
+false
+]
+]
+}
+},
+"SEC_nexpoint_2025.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "June 30, 2025",
+"fund_entity": "NexPoint Funds I, NexPoint Funds II",
+"distributor": null,
+"management_company": null,
+"governing_law": null,
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": null,
+"territory": [],
+"signatories": [],
+"retro": {
+"agreed": null,
+"rate": null,
+"included_classes": [],
+"excluded_classes": []
+},
+"funds": {
+"NexPoint Event Driven Fund": [],
+"NexPoint Merger Arbitrage Fund": [],
+"NexPoint Credit Catalyst Fund": [],
+"NexPoint Climate Tech Fund": []
+}
+},
+"Alpenblick_Global_Distribution_Agreement_2024.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "15 March 2024",
+"fund_entity": "Alpenblick Invest SICAV",
+"distributor": "Seeland Vertriebs AG",
+"management_company": "Alpenblick Asset Management S.A.",
+"governing_law": "Grand Duchy of Luxembourg",
+"jurisdiction": "Luxembourg City",
+"exclusivity": "non-exclusive",
+"termination_notice": "90 days",
+"territory": [
+"Austria",
+"Germany",
+"Liechtenstein",
+"Switzerland"
+],
+"signatories": [
+"Claire Weber",
+"Martin Keller"
+],
+"retro": {
+"agreed": true,
+"rate": "40% of the management fee",
+"included_classes": [],
+"excluded_classes": [
+"I"
+]
+},
+"funds": {
+"Alpenblick Invest SICAV - Global Equity Fund": [
+[
+"A EUR acc",
+"LU9839136744",
+true
+],
+[
+"A EUR dis",
+"LU9982702813",
+true
+],
+[
+"I EUR acc",
+"LU9148987654",
+false
+]
+],
+"Alpenblick Invest SICAV - Euro Corporate Bond Fund": [
+[
+"A EUR acc",
+"LU9321295867",
+true
+],
+[
+"I EUR acc",
+"LU9040228736",
+false
+]
+],
+"Alpenblick Invest SICAV - Swiss Small & Mid Cap Fund": [
+[
+"A CHF acc",
+"LU9285093068",
+true
+],
+[
+"I CHF acc",
+"LU9101408433",
+false
+]
+]
+}
+},
+"Alpenblick_Nachtrag_1_2025.pdf": {
+"document_type": "Amendment / Schedule",
+"agreement_date": "1. Oktober 2025",
+"fund_entity": "Alpenblick Invest SICAV",
+"distributor": "Seeland Vertriebs AG",
+"management_company": "Alpenblick Asset Management S.A.",
+"governing_law": "Luxembourg law",
+"jurisdiction": "Luxemburg",
+"exclusivity": null,
+"termination_notice": null,
+"territory": [
+"Italy"
+],
+"signatories": [
+"Claire Weber",
+"Martin Keller"
+],
+"retro": {
+"agreed": true,
+"rate": "35% der Verwaltungsverg\u00fctung",
+"included_classes": [
+"A"
+],
+"excluded_classes": [
+"I"
+]
+},
+"funds": {
+"Alpenblick Invest SICAV - Sustainable Infrastructure Fund": [
+[
+"A EUR acc",
+"LU9197580160",
+true
+],
+[
+"I EUR acc",
+"LU9654979210",
+false
+]
+],
+"Alpenblick Invest SICAV - Global Equity Fund": [
+[
+"I CHF hedged acc",
+"LU9094987500",
+false
+]
+]
+}
+},
+"Kestrel_Point_Amendment_2_2025.pdf": {
+"document_type": "Amendment / Schedule",
+"agreement_date": "30 June 2025",
+"fund_entity": "Kestrel Point Funds ICAV",
+"distributor": "Bodensee Privatbank AG",
+"management_company": "Kestrel Point Asset Management Limited",
+"governing_law": "Ireland",
+"jurisdiction": null,
+"exclusivity": null,
+"termination_notice": "60 days",
+"territory": [],
+"signatories": [
+"Aoife Brennan",
+"Sandra Keller"
+],
+"retro": {
+"agreed": true,
+"rate": "50% of the management fee",
+"included_classes": [
+"A",
+"B"
+],
+"excluded_classes": [
+"I",
+"Z"
+]
+},
+"funds": {
+"Kestrel Point Funds ICAV - Global Credit Opportunities Fund": [
+[
+"Class A USD",
+"IE9905592049",
+true
+],
+[
+"Class I USD",
+"IE9445613297",
+false
+]
+],
+"Kestrel Point Funds ICAV - Asia Dividend Fund": [
+[
+"Class A USD",
+"IE9512293890",
+true
+],
+[
+"Class I USD",
+"IE9279236074",
+false
+]
+]
+}
+},
+"Seealp_Vertriebsvertrag_2025.pdf": {
+"document_type": "Distribution Agreement",
+"agreement_date": "12. Februar 2025",
+"fund_entity": null,
+"distributor": "Bodensee Privatbank AG",
+"management_company": "Seealp Fondsleitung AG",
+"governing_law": "Swiss law",
+"jurisdiction": "Z\u00fcrich",
+"exclusivity": "non-exclusive",
+"termination_notice": "6 months",
+"territory": [
+"Liechtenstein",
+"Switzerland"
+],
+"signatories": [
+"Reto Ammann",
+"Sandra Keller"
+],
+"retro": {
+"agreed": true,
+"rate": "0.60% p.a.",
+"included_classes": [
+"A",
+"B"
+],
+"excluded_classes": [
+"I",
+"N"
+]
+},
+"funds": {
+"Seealp Swiss Equity Fund": [
+[
+"A CHF dis",
+"CH9340199049",
+true
+],
+[
+"B CHF acc",
+"CH9838573564",
+true
+],
+[
+"I CHF acc",
+"CH9096585011",
+false
+]
+],
+"Seealp CHF Bond Fund": [
+[
+"A CHF dis",
+"CH9089067316",
+true
+],
+[
+"I CHF acc",
+"CH9409776513",
+false
+]
+],
+"Seealp Global Balanced Fund": [
+[
+"B CHF acc",
+"CH9465166245",
+true
+]
+]
+}
+}
+}
